@@ -9,7 +9,6 @@ struct _node
     int y;
     struct _node *next;
 };
-
 typedef struct _node Node;
 
 struct _queue
@@ -18,7 +17,6 @@ struct _queue
     Node *tail;
     int size;
 };
-
 typedef struct _queue Queue;
 
 void enQueue(Queue *que, int x, int y, int level)
@@ -42,20 +40,22 @@ void enQueue(Queue *que, int x, int y, int level)
     que->size += 1;
 }
 
-int short_path(char *array, int start_x, int start_y, int row, int col)
+int short_path(int *array, int start_x, int start_y, int map_size)
 {
     Node *head, *tail, *p, *target;
     int x, y, level, i, j;
-    char chr;
-    int flag[row][col];
-    for (i = 0; i < row; i++)
+    //char chr;
+    int flag[map_size][map_size];
+    for (i = 0; i < map_size; i++)
     {
-        for (j = 0; j < col; j++)
+        for (j = 0; j < map_size; j++)
         {
             flag[i][j] = 0;
+            //球沒走過是0
         }
     }
-    flag[start_x][start_y] = 1;
+    flag[start_x][start_y] = 2;
+    //球是2
     Queue que;
     que.head = NULL;
     que.tail = NULL;
@@ -73,61 +73,64 @@ int short_path(char *array, int start_x, int start_y, int row, int col)
         // chr = *(array+x*col+y);
         // printf("deQueue x= %d, y= %d, level= %d\n",x,y,level);
         free(target);
-        // left
-        if ((y - 1 >= 0) && (y < col) && (flag[x][y - 1] == 0))
+        // down
+        if ((y - 1 >= 0) && (y < map_size) && (flag[x][y - 1] == 0))
         {
-            chr = *(array + x * col + y - 1);
+            
+            //chr = *(array + x * map_size + y - 1);
             // printf("explored left %c, x= %d, y= %d, level= %d\n", chr, x,y-1, level+1);
             flag[x][y - 1] = 1;
-            if (chr == '.')
+
+            /*if (chr == '.')
             {
                 // printf("enqueue x= %d, y= %d, level= %d\n",x,y-1,level+1);
                 enQueue(&que, x, y - 1, level + 1);
             }
             else if (chr == 'E')
                 return level + 1;
+            */
         }
-        // right
-        if ((y + 1 < col) && (y >= 0) && (flag[x][y + 1] == 0))
+        // up
+        if ((y + 1 < map_size) && (y >= 0) && (flag[x][y + 1] == 0))
         {
-            chr = *(array + x * col + y + 1);
+            //chr = *(array + x * map_size + y + 1);
             // printf("explored right %c, x= %d, y= %d, level= %d\n", chr, x,y+1, level+1);
             flag[x][y + 1] = 1;
-            if (chr == '.')
+            /*if (chr == '.')
             {
                 // printf("enqueue x= %d, y= %d, level= %d\n",x,y+1,level+1);
                 enQueue(&que, x, y + 1, level + 1);
             }
             else if (chr == 'E')
-                return level + 1;
+                return level + 1;*/
         }
-        // up
-        if (x - 1 >= 0 && x < row && (flag[x - 1][y] == 0))
+        // left
+        if (x - 1 >= 0 && x < map_size && (flag[x - 1][y] == 0))
         {
-            chr = *(array + (x - 1) * col + y);
+            //chr = *(array + (x - 1) * map_size + y);
             // printf("explored up %c, x= %d, y= %d, level= %d\n", chr, x-1,y, level+1);
             flag[x - 1][y] = 1;
-            if (chr == '.')
+            /*if (chr == '.')
             {
                 // printf("enqueue x= %d, y= %d, level= %d\n",x-1,y,level+1);
                 enQueue(&que, x - 1, y, level + 1);
             }
             else if (chr == 'E')
-                return level + 1;
+                return level + 1;*/
         }
-        // down
-        if (x + 1 < row && x >= 0 && (flag[x + 1][y] == 0))
+        // right
+        if (x + 1 < map_size && x >= 0 && (flag[x + 1][y] == 0))
         {
-            chr = *(array + (x + 1) * col + y);
+            //chr = *(array + (x + 1) * map_size + y);
             // printf("explored down %c, x= %d, y= %d, level= %d\n", chr, x+1,y, level+1);
             flag[x + 1][y] = 1;
-            if (chr == '.')
+            /*if (chr == '.')
             {
                 // printf("enqueue x= %d, y= %d, level= %d\n",x+1,y,level+1);
                 enQueue(&que, x + 1, y, level + 1);
             }
             else if (chr == 'E')
-                return level + 1;
+                return level + 1;*/
         }
     }
     return -1;
@@ -140,20 +143,20 @@ int main()
     scanf("");
     scanf("%d %d %d %d\n", &ball_1[0][0], &ball_1[0][1], &ball_2[0][0], &ball_2[0][1]);
     scanf("%d %d %d %d\n", &ball_1[1][0], &ball_1[1][1], &ball_2[1][0], &ball_2[1][1]);
-    char array[m][n];
-    /*for (i = 0; i < m; i++)
-    {
-        gets(array[i]);
-        for (j = 0; j < n; j++)
-        {
-            if (array[i][j] == 'S')
+    int m_array[map_size][map_size];
+    for (i = map_size - 1; i >= 0 ; i--){
+        for (j = 0; j < map_size; j++){
+            scanf("%d", &m_array[i][j]);
+            //牆壁是1路是0
+            /*if (m_array[i][j] == 'S')
             {
                 strt_x = i;
                 strt_y = j;
-            }
+            }*/
         }
-    }*/
-    sum += short_path((char *)array, strt_x, strt_y, m, n);
+        scanf("\n");
+    }
+    sum += short_path((int *)array, ball_1[0][0], ball_1[0][1], map_size);
 
     /*
     array[0][0]='.';array[0][1]='.'; array[0][2]='.';array[0][3]='.';array[0][4]='.';array[0][5]='.';
