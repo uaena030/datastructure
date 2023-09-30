@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define R 30
-
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
 int walker[10000000];
 struct _node
 {
@@ -45,7 +45,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
 {
     Node *head, *tail, *p, *target;
     int x, y, level, i, j, walk_num = -1;
-    int check_rep;
+    int chr;
     int flag[map_size][map_size];
     for (i = 0; i < map_size; i++)
     {
@@ -56,7 +56,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         }
     }
     flag[start_x][start_y] = 2;
-    //球(或是走過的路徑)是2
+    //球是2
     flag[end_x][end_y] = 3;
     //終點是3
     Queue que;
@@ -74,55 +74,70 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         level = target->level;
         que.head = target->next;
         que.size -= 1;
+        // chr = *(array+x*col+y);
+        // printf("deQueue x= %d, y= %d, level= %d\n",x,y,level);
         free(target);
         // down
         if ((y - 1 >= 0) && (y < map_size) && (flag[x][y - 1] == 0))
         {
             
-            check_rep = *(array + x * map_size + y - 1);
+            chr = *(array + x * map_size + y - 1);
+            // printf("explored left %c, x= %d, y= %d, level= %d\n", chr, x,y-1, level+1);
             flag[x][y - 1] = 2;
             walker[walk_num] = 2;
-            if (check_rep == 0){
+            if (chr == 0 || chr == 3)
+            {
+                // printf("enqueue x= %d, y= %d, level= %d\n",x,y-1,level+1);
                 enQueue(&que, x, y - 1, level + 1);
+                if (chr == 3)
+                    return level + 1;
             }
-            else if (check_rep == 3)
-                return level + 1;
+            
         }
         // up
         if ((y + 1 < map_size) && (y >= 0) && (flag[x][y + 1] == 0))
         {
-            check_rep = *(array + x * map_size + y + 1);
+            chr = *(array + x * map_size + y + 1);
+            // printf("explored right %c, x= %d, y= %d, level= %d\n", chr, x,y+1, level+1);
             flag[x][y + 1] = 2;
             walker[walk_num] = 0;
-            if (check_rep == 0){
+            if (chr == 0 || chr == 3)
+            {
+                // printf("enqueue x= %d, y= %d, level= %d\n",x,y+1,level+1);
                 enQueue(&que, x, y + 1, level + 1);
+                if (chr == 3)
+                    return level + 1;
             }
-            else if (check_rep == 3)
-                return level + 1;
         }
         // left
         if (x - 1 >= 0 && x < map_size && (flag[x - 1][y] == 0))
         {
-            check_rep = *(array + (x - 1) * map_size + y);
+            chr = *(array + (x - 1) * map_size + y);
+            // printf("explored up %c, x= %d, y= %d, level= %d\n", chr, x-1,y, level+1);
             flag[x - 1][y] = 2;
             walker[walk_num] = 3;
-            if (check_rep == 0){
+            if (chr == 0 || chr == 3)
+            {
+                // printf("enqueue x= %d, y= %d, level= %d\n",x-1,y,level+1);
                 enQueue(&que, x - 1, y, level + 1);
+                if (chr == 3)
+                    return level + 1;
             }
-            else if (check_rep == 3)
-                return level + 1;
         }
         // right
         if (x + 1 < map_size && x >= 0 && (flag[x + 1][y] == 0))
         {
-            check_rep = *(array + (x + 1) * map_size + y);
+            chr = *(array + (x + 1) * map_size + y);
+            // printf("explored down %c, x= %d, y= %d, level= %d\n", chr, x+1,y, level+1);
             flag[x + 1][y] = 2;
             walker[walk_num] = 1;
-            if (check_rep == 0){
+            if (chr == 0 || chr == 3)
+            {
+                // printf("enqueue x= %d, y= %d, level= %d\n",x+1,y,level+1);
                 enQueue(&que, x + 1, y, level + 1);
+                if (chr == 3)
+                    return level + 1;
             }
-            else if (check_rep == 3)
-                return level + 1;
         }
     }
     return -1;
@@ -132,6 +147,7 @@ int main()
     int map_size, i, j, sum = 0;
     int ball_1[2][2], ball_2[2][2]; 
     scanf("%d", &map_size);
+    //printf("%d\n", map_size);
     int m_array[map_size][map_size];
     for (j = map_size - 1; j >= 0 ; j--){
         for (i = 0; i < map_size; i++){
@@ -145,6 +161,8 @@ int main()
     for(int j = 0; j < sum; j++){
         printf("%d", walker[j]);
     }
+    
+    //printf("x: %d, y= %d\n", ball_1[0][0], ball_1[0][1]);
 
     printf("%d\n", sum);
     sum = 0;
@@ -152,5 +170,11 @@ int main()
     for (int j = 0; j < sum; j++){
         printf("%d", walker[j]);
     }
+
+    /*
+    for(i=0;i<m;i++)
+    {
+        printf("%c %c %c %c %c\n",array[i][0],array[i][1],array[i][2],array[i][3],array[i][4]);
+    }*/
     return 0;
 }
