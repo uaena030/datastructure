@@ -4,7 +4,7 @@
 1 0 1 0 1 0 1 1 0 0 1
 1 0 1 0 0 0 1 0 0 0 1
 1 0 1 1 1 1 1 0 1 1 1 
-1 0 0 0 0 0 1 0 0 0 1
+1 0 0 0 0 3 1 0 0 0 1
 1 0 1 1 1 1 1 1 1 0 1 
 1 0 1 0 0 0 0 0 1 0 1
 1 1 1 0 1 1 1 0 1 0 1 
@@ -220,7 +220,16 @@ deQueue x= 3, y= 5, level= 40
 explored right 0, x= 4, y= 5, level= 41
 enqueue x= 4, y= 5, level= 41
 deQueue x= 4, y= 5, level= 41
+
+
+
+
 -1
+
+
+
+
+
 deQueue x= 9, y= 9, level= 0
 explored down 0, x= 9, y= 8, level= 1
 enqueue x= 9, y= 8, level= 1
@@ -229,6 +238,7 @@ explored left 0, x= 8, y= 9, level= 1
 enqueue x= 8, y= 9, level= 1
 explored right 1, x= 10, y= 9, level= 1
 deQueue x= 9, y= 8, level= 1
+
 explored down 0, x= 9, y= 7, level= 2
 enqueue x= 9, y= 7, level= 2
 explored left 0, x= 8, y= 8, level= 2
@@ -239,11 +249,13 @@ explored up 1, x= 8, y= 10, level= 2
 explored left 0, x= 7, y= 9, level= 2
 enqueue x= 7, y= 9, level= 2
 deQueue x= 9, y= 7, level= 2
+
 explored down 1, x= 9, y= 6, level= 3
 explored left 0, x= 8, y= 7, level= 3
 enqueue x= 8, y= 7, level= 3
 explored right 1, x= 10, y= 7, level= 3
 deQueue x= 8, y= 8, level= 2
+
 explored left 1, x= 7, y= 8, level= 3
 deQueue x= 7, y= 9, level= 2
 explored up 1, x= 7, y= 10, level= 3

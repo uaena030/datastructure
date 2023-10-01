@@ -57,7 +57,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
     }
     flag[start_x][start_y] = 2;
     //球(或是走過的路徑)是2
-    flag[end_x][end_y] = 3;
+    //  flag[end_x][end_y] = 3;
     //終點是3
     Queue que;
     que.head = NULL;
@@ -74,17 +74,17 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         level = target->level;
         que.head = target->next;
         que.size -= 1;
-        printf("deQueue x= %d, y= %d, level= %d\n",x,y,level);
+        //printf("deQueue x= %d, y= %d, level= %d\n",x,y,level);
         free(target);
         // down
         if ((y - 1 >= 0) && (y < map_size) && (flag[x][y - 1] == 0))
         {
             
             check_rep = *(array + x * map_size + y - 1);
-            printf("explored down %d, x= %d, y= %d, level= %d\n", check_rep, x,y-1, level+1);
+            //printf("explored down %d, x= %d, y= %d, level= %d\n", check_rep, x,y-1, level+1);
             flag[x][y - 1] = 2;
             if (check_rep == 0){
-                printf("enqueue x= %d, y= %d, level= %d\n",x,y-1,level+1);
+                //printf("enqueue x= %d, y= %d, level= %d\n",x,y-1,level+1);
                 enQueue(&que, x, y - 1, level + 1);
                 walker[walk_num] = 2;
             }
@@ -95,10 +95,10 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         if ((y + 1 < map_size) && (y >= 0) && (flag[x][y + 1] == 0))
         {
             check_rep = *(array + x * map_size + y + 1);
-            printf("explored up %d, x= %d, y= %d, level= %d\n", check_rep, x, y + 1, level + 1);
+            //printf("explored up %d, x= %d, y= %d, level= %d\n", check_rep, x, y + 1, level + 1);
             flag[x][y + 1] = 2;
             if (check_rep == 0){
-                printf("enqueue x= %d, y= %d, level= %d\n", x, y + 1, level + 1);
+                //printf("enqueue x= %d, y= %d, level= %d\n", x, y + 1, level + 1);
                 enQueue(&que, x, y + 1, level + 1);
                 walker[walk_num] = 0;
             }
@@ -109,10 +109,10 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         if (x - 1 >= 0 && x < map_size && (flag[x - 1][y] == 0))
         {
             check_rep = *(array + (x - 1) * map_size + y);
-            printf("explored left %d, x= %d, y= %d, level= %d\n", check_rep, x - 1, y, level + 1);
+            //printf("explored left %d, x= %d, y= %d, level= %d\n", check_rep, x - 1, y, level + 1);
             flag[x - 1][y] = 2;
             if (check_rep == 0){
-                printf("enqueue x= %d, y= %d, level= %d\n", x - 1, y, level + 1);
+                //printf("enqueue x= %d, y= %d, level= %d\n", x - 1, y, level + 1);
                 enQueue(&que, x - 1, y, level + 1);
                 walker[walk_num] = 3;
             }
@@ -123,10 +123,10 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         if (x + 1 < map_size && x >= 0 && (flag[x + 1][y] == 0))
         {
             check_rep = *(array + (x + 1) * map_size + y);
-            printf("explored right %d, x= %d, y= %d, level= %d\n", check_rep, x + 1, y, level + 1);
+            //printf("explored right %d, x= %d, y= %d, level= %d\n", check_rep, x + 1, y, level + 1);
             flag[x + 1][y] = 2;
             if (check_rep == 0){
-                printf("enqueue x= %d, y= %d, level= %d\n", x + 1, y, level + 1);
+                //printf("enqueue x= %d, y= %d, level= %d\n", x + 1, y, level + 1);
                 enQueue(&que, x + 1, y, level + 1);
                 walker[walk_num] = 1;
             }
@@ -154,8 +154,7 @@ int main()
     for(int j = 0; j < sum; j++){
         printf("%d", walker[j]);
     }
-
-    printf("%d\n", sum);
+    printf("\n");
     sum = 0;
     sum += short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
     for (int j = 0; j < sum; j++){

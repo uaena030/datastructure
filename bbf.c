@@ -130,7 +130,7 @@ int short_path(char *array, int start_x, int start_y, int row, int col)
                 return level + 1;
         }
     }
-    return -1;
+    return 0;
 }
 int main()
 {
