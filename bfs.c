@@ -81,10 +81,12 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         {
             
             check_rep = *(array + x * map_size + y - 1);
+            printf("explored down %d, x= %d, y= %d, level= %d\n", check_rep, x,y-1, level+1);
             flag[x][y - 1] = 2;
-            walker[walk_num] = 2;
             if (check_rep == 0){
+                printf("enqueue x= %d, y= %d, level= %d\n",x,y-1,level+1);
                 enQueue(&que, x, y - 1, level + 1);
+                walker[walk_num] = 2;
             }
             else if (check_rep == 3)
                 return level + 1;
@@ -93,10 +95,12 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         if ((y + 1 < map_size) && (y >= 0) && (flag[x][y + 1] == 0))
         {
             check_rep = *(array + x * map_size + y + 1);
+            printf("explored up %d, x= %d, y= %d, level= %d\n", check_rep, x, y + 1, level + 1);
             flag[x][y + 1] = 2;
-            walker[walk_num] = 0;
             if (check_rep == 0){
+                printf("enqueue x= %d, y= %d, level= %d\n", x, y + 1, level + 1);
                 enQueue(&que, x, y + 1, level + 1);
+                walker[walk_num] = 0;
             }
             else if (check_rep == 3)
                 return level + 1;
@@ -105,10 +109,12 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         if (x - 1 >= 0 && x < map_size && (flag[x - 1][y] == 0))
         {
             check_rep = *(array + (x - 1) * map_size + y);
+            printf("explored left %d, x= %d, y= %d, level= %d\n", check_rep, x - 1, y, level + 1);
             flag[x - 1][y] = 2;
-            walker[walk_num] = 3;
             if (check_rep == 0){
+                printf("enqueue x= %d, y= %d, level= %d\n", x - 1, y, level + 1);
                 enQueue(&que, x - 1, y, level + 1);
+                walker[walk_num] = 3;
             }
             else if (check_rep == 3)
                 return level + 1;
@@ -117,10 +123,12 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         if (x + 1 < map_size && x >= 0 && (flag[x + 1][y] == 0))
         {
             check_rep = *(array + (x + 1) * map_size + y);
+            printf("explored right %d, x= %d, y= %d, level= %d\n", check_rep, x + 1, y, level + 1);
             flag[x + 1][y] = 2;
-            walker[walk_num] = 1;
             if (check_rep == 0){
+                printf("enqueue x= %d, y= %d, level= %d\n", x + 1, y, level + 1);
                 enQueue(&que, x + 1, y, level + 1);
+                walker[walk_num] = 1;
             }
             else if (check_rep == 3)
                 return level + 1;
