@@ -56,7 +56,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
     }
     flag[start_x][start_y] = 2;
     // 球(或是走過的路徑)是2
-    //   flag[end_x][end_y] = 3;
+    // flag[end_x][end_y] = 3;
     // 終點是3
     Queue que;
     que.head = NULL;
@@ -103,7 +103,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
             else if (check_rep == 3){
                 int route_x = end_x;
                 int route_y = end_y;
-                int walker[10000];
+                int walker[map_size * map_size];
                 int walk_num = -1;
                 record[route_x][route_y] = 2; 
                 while (record[route_x][route_y] != -1)
@@ -145,9 +145,9 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
             if (check_rep == 0)
             {
                 // printf("enqueue x= %d, y= %d, level= %d\n", x, y + 1, level + 1);
-                if (record[x][y - 1] == -1)
+                if (record[x][y + 1] == -1)
                 {
-                    record[x][y - 1] = 0;
+                    record[x][y + 1] = 0;
                 }
                 enQueue(&que, x, y + 1, level + 1);
                 //walker[walk_num] = 0;
@@ -155,7 +155,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
             else if (check_rep == 3){
                 int route_x = end_x;
                 int route_y = end_y;
-                int walker[10000];
+                int walker[map_size * map_size];
                 int walk_num = -1;
                 record[route_x][route_y] = 0;
                 while (record[route_x][route_y] != -1)
@@ -198,9 +198,9 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
             if (check_rep == 0)
             {
                 // printf("enqueue x= %d, y= %d, level= %d\n", x - 1, y, level + 1);
-                if (record[x][y - 1] == -1)
+                if (record[x - 1][y] == -1)
                 {
-                    record[x][y - 1] = 3;
+                    record[x - 1][y] = 3;
                 }
                 enQueue(&que, x - 1, y, level + 1);
                 //walker[walk_num] = 3;
@@ -208,7 +208,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
             else if (check_rep == 3){
                 int route_x = end_x;
                 int route_y = end_y;
-                int walker[10000];
+                int walker[map_size * map_size];
                 int walk_num = -1;
                 record[route_x][route_y] = 3;
                 while (record[route_x][route_y] != -1)
@@ -251,9 +251,9 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
             if (check_rep == 0)
             {
                 // printf("enqueue x= %d, y= %d, level= %d\n", x + 1, y, level + 1);
-                if (record[x][y - 1] == -1)
+                if (record[x + 1][y] == -1)
                 {
-                    record[x][y - 1] = 1;
+                    record[x + 1][y] = 1;
                 }
                 enQueue(&que, x + 1, y, level + 1);
                 //walker[walk_num] = 1;
@@ -261,9 +261,15 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
             else if (check_rep == 3){
                 int route_x = end_x;
                 int route_y = end_y;
-                int walker[10000];
+                int walker[map_size * map_size];
                 int walk_num = -1;
                 record[route_x][route_y] = 1;
+                /*for(int n = 0; n < map_size; n++){
+                    for(int m = 0; m < map_size; m++){
+                        printf("%2d", record[n][m]);
+                    }
+                    printf("\n");
+                }*/
                 while (record[route_x][route_y] != -1)
                 {
                     walk_num++;
