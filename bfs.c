@@ -74,6 +74,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
         level = target->level;
         que.head = target->next;
         que.size -= 1;
+        printf("deQueue x= %d, y= %d, level= %d\n",x,y,level);
         free(target);
         // down
         if ((y - 1 >= 0) && (y < map_size) && (flag[x][y - 1] == 0))
