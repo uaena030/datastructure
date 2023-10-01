@@ -105,6 +105,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 int route_y = end_y;
                 int walker[10000];
                 int walk_num = -1;
+                record[route_x][route_y] = 2; 
                 while (record[route_x][route_y] != -1)
                 {
                     walk_num++;
@@ -129,7 +130,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                         route_x++;
                     }
                 }
-                for(int u = level + 1; u >= 0 ; u--){
+                for(int u = walk_num; u >= 0 ; u--){
                     printf("%d", walker[u]);
                 }
                 return level + 1;
@@ -156,6 +157,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 int route_y = end_y;
                 int walker[10000];
                 int walk_num = -1;
+                record[route_x][route_y] = 0;
                 while (record[route_x][route_y] != -1)
                 {
                     walk_num++;
@@ -180,7 +182,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                         route_x++;
                     }
                 }
-                for (int u = level + 1; u >= 0; u--)
+                for (int u = walk_num; u >= 0; u--)
                 {
                     printf("%d", walker[u]);
                 }
@@ -208,6 +210,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 int route_y = end_y;
                 int walker[10000];
                 int walk_num = -1;
+                record[route_x][route_y] = 3;
                 while (record[route_x][route_y] != -1)
                 {
                     walk_num++;
@@ -232,7 +235,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                         route_x++;
                     }
                 }
-                for (int u = level + 1; u >= 0; u--)
+                for (int u = walk_num; u >= 0; u--)
                 {
                     printf("%d", walker[u]);
                 }
@@ -260,6 +263,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 int route_y = end_y;
                 int walker[10000];
                 int walk_num = -1;
+                record[route_x][route_y] = 1;
                 while (record[route_x][route_y] != -1)
                 {
                     walk_num++;
@@ -284,7 +288,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                         route_x++;
                     }
                 }
-                for (int u = level + 1; u >= 0; u--)
+                for (int u = walk_num; u >= 0; u--)
                 {
                     printf("%d", walker[u]);
                 }
@@ -316,7 +320,7 @@ int main()
     /*for(int j = 0; j < sum; j++){
         printf("%d", walker[j]);
     }*/
-    printf("%d", sum);
+    //printf("%d", sum);
     printf("\n");
     sum = 0;
     m_array[ball_1[1][0]][ball_1[1][1]] = 0;
@@ -325,6 +329,6 @@ int main()
     /*for (int j = 0; j < sum; j++){
         printf("%d", walker[j]);
     }*/
-    printf("%d", sum);
+    //printf("%d", sum);
     return 0;
 }
