@@ -8,6 +8,7 @@ struct _node
     int level;
     int x;
     int y;
+    int direction = -1;
     struct _node *next;
 };
 typedef struct _node Node;
@@ -152,16 +153,18 @@ int main()
     scanf("%d %d %d %d", &ball_1[1][0], &ball_1[1][1], &ball_2[1][0], &ball_2[1][1]);
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     sum += short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
-    for(int j = 0; j < sum; j++){
+    /*for(int j = 0; j < sum; j++){
         printf("%d", walker[j]);
-    }
+    }*/
+    printf("%d", sum);
     printf("\n");
     sum = 0;
     m_array[ball_1[1][0]][ball_1[1][1]] = 0;
     m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum += short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
-    for (int j = 0; j < sum; j++){
+    /*for (int j = 0; j < sum; j++){
         printf("%d", walker[j]);
-    }
+    }*/
+    printf("%d", sum);
     return 0;
 }
