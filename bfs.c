@@ -330,7 +330,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
 }
 int main()
 {
-    int map_size, i, j;
+    int map_size, i, j, sum1, sum2;
     int ball_1[2][2], ball_2[2][2];
     scanf("%d", &map_size);
     int m_array[map_size][map_size];
@@ -346,20 +346,19 @@ int main()
     scanf("%d %d %d %d", &ball_1[1][0], &ball_1[1][1], &ball_2[1][0], &ball_2[1][1]);
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     m_array[ball_2[1][0]][ball_2[1][1]] = 3;
-    short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+    sum1 = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+    printf("\n");
     if(check_hole = 2){
         check_hole = -1;
         m_array[ball_1[1][0]][ball_1[1][1]] = 0;
         m_array[ball_2[1][0]][ball_2[1][1]] = 0;
-        printf("\n");
         m_array[ball_1[1][0]][ball_1[1][1]] = 3;
-        short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+        sum2 = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
     }
     else if(check_hole = 1){
         check_hole = -1;
         m_array[ball_1[1][0]][ball_1[1][1]] = 0;
         m_array[ball_2[1][0]][ball_2[1][1]] = 0;
-        printf("\n");
         m_array[ball_2[1][0]][ball_2[1][1]] = 3;
         short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
     }
