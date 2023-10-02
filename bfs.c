@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #define R 30
 //int check_hole = -1;//1是按原定，不是就是2
-int print_check = -1;
+int print_check = -1;//在檢查完所有起終點組合後算出最短路徑，控制該輸出
 
 struct _node
 {
@@ -97,14 +97,14 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
             {
                 // printf("enqueue x= %d, y= %d, level= %d\n",x,y-1,level+1);
                 if(record[x][y - 1] == -1){
-                    record[x][y - 1] = 2;
+                    record[x][y - 1] = 2;//新增方向
                 } 
                 enQueue(&que, x, y - 1, level + 1);
                 
                 //walker[walk_num] = 2;
             }
             else if (check_rep == 3){
-                if(print_check != -1){
+                if(print_check != -1){//判斷為最短路徑
                     int route_x = x;
                     int route_y = y - 1;
                     /*if(x == end_x && y - 1 == end_y){
@@ -115,7 +115,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                     int walker[map_size * map_size];
                     int walk_num = -1;
                     record[route_x][route_y] = 2; 
-                    while (record[route_x][route_y] != -1)
+                    while (record[route_x][route_y] != -1)//輸出方向(回推)
                     {
                         walk_num++;
                         if (record[route_x][route_y] == 0)
@@ -140,10 +140,10 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                         }
                     }
                     for(int u = walk_num; u >= 0 ; u--){
-                        printf("%d", walker[u]);
+                        printf("%d", walker[u]);//跟上面同理
                     }
                 }
-                return level + 1;
+                return level + 1;//會傳路徑長
             }
         }
         // up
@@ -356,9 +356,9 @@ int main()
     scanf("%d %d %d %d", &ball_1[1][0], &ball_1[1][1], &ball_2[1][0], &ball_2[1][1]);
     //m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     //m_array[ball_2[1][0]][ball_2[1][1]] = 3;
-    m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+    m_array[ball_1[1][0]][ball_1[1][1]] = 3;//初始化終點
     sum[0] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
-    m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+    m_array[ball_1[1][0]][ball_1[1][1]] = 0;//還原，下面以此類推
     m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[1] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_2[1][0], ball_2[1][1]);
     m_array[ball_2[1][0]][ball_2[1][1]] = 0;
