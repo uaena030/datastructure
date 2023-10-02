@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #define R 30
 int check_hole = -1;//1是按原定，不是就是2
+int print_check = -1;
 
 struct _node
 {
@@ -102,42 +103,44 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 //walker[walk_num] = 2;
             }
             else if (check_rep == 3){
-                int route_x = x;
-                int route_y = y - 1;
-                if(x == end_x && y - 1 == end_y){
-                    check_hole = 1;
-                }
-                else
-                    check_hole = 2;
-                int walker[map_size * map_size];
-                int walk_num = -1;
-                record[route_x][route_y] = 2; 
-                while (record[route_x][route_y] != -1)
-                {
-                    walk_num++;
-                    if (record[route_x][route_y] == 0)
-                    {
-                        walker[walk_num] = 0;
-                        route_y--;
+                if(print_check != -1){
+                    int route_x = x;
+                    int route_y = y - 1;
+                    if(x == end_x && y - 1 == end_y){
+                        check_hole = 1;
                     }
-                    else if (record[route_x][route_y] == 1)
+                    else
+                        check_hole = 2;
+                    int walker[map_size * map_size];
+                    int walk_num = -1;
+                    record[route_x][route_y] = 2; 
+                    while (record[route_x][route_y] != -1)
                     {
-                        walker[walk_num] = 1;
-                        route_x--;
+                        walk_num++;
+                        if (record[route_x][route_y] == 0)
+                        {
+                            walker[walk_num] = 0;
+                            route_y--;
+                        }
+                        else if (record[route_x][route_y] == 1)
+                        {
+                            walker[walk_num] = 1;
+                            route_x--;
+                        }
+                        else if (record[route_x][route_y] == 2)
+                        {
+                            walker[walk_num] = 2;
+                            route_y++;
+                        }
+                        else if (record[route_x][route_y] == 3)
+                        {
+                            walker[walk_num] = 3;
+                            route_x++;
+                        }
                     }
-                    else if (record[route_x][route_y] == 2)
-                    {
-                        walker[walk_num] = 2;
-                        route_y++;
+                    for(int u = walk_num; u >= 0 ; u--){
+                        printf("%d", walker[u]);
                     }
-                    else if (record[route_x][route_y] == 3)
-                    {
-                        walker[walk_num] = 3;
-                        route_x++;
-                    }
-                }
-                for(int u = walk_num; u >= 0 ; u--){
-                    printf("%d", walker[u]);
                 }
                 return level + 1;
             }
@@ -159,44 +162,46 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 //walker[walk_num] = 0;
             }
             else if (check_rep == 3){
-                int route_x = x;
-                int route_y = y + 1;
-                if (x == end_x && y + 1 == end_y)
-                {
-                    check_hole = 1;
-                }
-                else
-                    check_hole = 2;
-                int walker[map_size * map_size];
-                int walk_num = -1;
-                record[route_x][route_y] = 0;
-                while (record[route_x][route_y] != -1)
-                {
-                    walk_num++;
-                    if (record[route_x][route_y] == 0)
+                if (print_check != -1){
+                    int route_x = x;
+                    int route_y = y + 1;
+                    if (x == end_x && y + 1 == end_y)
                     {
-                        walker[walk_num] = 0;
-                        route_y--;
+                        check_hole = 1;
                     }
-                    else if (record[route_x][route_y] == 1)
+                    else
+                        check_hole = 2;
+                    int walker[map_size * map_size];
+                    int walk_num = -1;
+                    record[route_x][route_y] = 0;
+                    while (record[route_x][route_y] != -1)
                     {
-                        walker[walk_num] = 1;
-                        route_x--;
+                        walk_num++;
+                        if (record[route_x][route_y] == 0)
+                        {
+                            walker[walk_num] = 0;
+                            route_y--;
+                        }
+                        else if (record[route_x][route_y] == 1)
+                        {
+                            walker[walk_num] = 1;
+                            route_x--;
+                        }
+                        else if (record[route_x][route_y] == 2)
+                        {
+                            walker[walk_num] = 2;
+                            route_y++;
+                        }
+                        else if (record[route_x][route_y] == 3)
+                        {
+                            walker[walk_num] = 3;
+                            route_x++;
+                        }
                     }
-                    else if (record[route_x][route_y] == 2)
+                    for (int u = walk_num; u >= 0; u--)
                     {
-                        walker[walk_num] = 2;
-                        route_y++;
+                        printf("%d", walker[u]);
                     }
-                    else if (record[route_x][route_y] == 3)
-                    {
-                        walker[walk_num] = 3;
-                        route_x++;
-                    }
-                }
-                for (int u = walk_num; u >= 0; u--)
-                {
-                    printf("%d", walker[u]);
                 }
                 return level + 1;
             }
@@ -218,44 +223,46 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 //walker[walk_num] = 3;
             }
             else if (check_rep == 3){
-                int route_x = x - 1;
-                int route_y = y;
-                if (x - 1 == end_x && y == end_y)
-                {
-                    check_hole = 1;
-                }
-                else
-                    check_hole = 2;
-                int walker[map_size * map_size];
-                int walk_num = -1;
-                record[route_x][route_y] = 3;
-                while (record[route_x][route_y] != -1)
-                {
-                    walk_num++;
-                    if (record[route_x][route_y] == 0)
+                if (print_check != -1){
+                    int route_x = x - 1;
+                    int route_y = y;
+                    if (x - 1 == end_x && y == end_y)
                     {
-                        walker[walk_num] = 0;
-                        route_y--;
+                        check_hole = 1;
                     }
-                    else if (record[route_x][route_y] == 1)
+                    else
+                        check_hole = 2;
+                    int walker[map_size * map_size];
+                    int walk_num = -1;
+                    record[route_x][route_y] = 3;
+                    while (record[route_x][route_y] != -1)
                     {
-                        walker[walk_num] = 1;
-                        route_x--;
+                        walk_num++;
+                        if (record[route_x][route_y] == 0)
+                        {
+                            walker[walk_num] = 0;
+                            route_y--;
+                        }
+                        else if (record[route_x][route_y] == 1)
+                        {
+                            walker[walk_num] = 1;
+                            route_x--;
+                        }
+                        else if (record[route_x][route_y] == 2)
+                        {
+                            walker[walk_num] = 2;
+                            route_y++;
+                        }
+                        else if (record[route_x][route_y] == 3)
+                        {
+                            walker[walk_num] = 3;
+                            route_x++;
+                        }
                     }
-                    else if (record[route_x][route_y] == 2)
+                    for (int u = walk_num; u >= 0; u--)
                     {
-                        walker[walk_num] = 2;
-                        route_y++;
+                        printf("%d", walker[u]);
                     }
-                    else if (record[route_x][route_y] == 3)
-                    {
-                        walker[walk_num] = 3;
-                        route_x++;
-                    }
-                }
-                for (int u = walk_num; u >= 0; u--)
-                {
-                    printf("%d", walker[u]);
                 }
                 return level + 1;
             }
@@ -277,50 +284,52 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 //walker[walk_num] = 1;
             }
             else if (check_rep == 3){
-                int route_x = x + 1;
-                int route_y = y;
-                if (x + 1 == end_x && y == end_y)
-                {
-                    check_hole = 1;
-                }
-                else
-                    check_hole = 2;
-                int walker[map_size * map_size];
-                int walk_num = -1;
-                record[route_x][route_y] = 1;
-                /*for(int n = 0; n < map_size; n++){
-                    for(int m = 0; m < map_size; m++){
-                        printf("%2d", record[n][m]);
-                    }
-                    printf("\n");
-                }*/
-                while (record[route_x][route_y] != -1)
-                {
-                    walk_num++;
-                    if (record[route_x][route_y] == 0)
+                if (print_check != -1){
+                    int route_x = x + 1;
+                    int route_y = y;
+                    if (x + 1 == end_x && y == end_y)
                     {
-                        walker[walk_num] = 0;
-                        route_y--;
+                        check_hole = 1;
                     }
-                    else if (record[route_x][route_y] == 1)
+                    else
+                        check_hole = 2;
+                    int walker[map_size * map_size];
+                    int walk_num = -1;
+                    record[route_x][route_y] = 1;
+                    /*for(int n = 0; n < map_size; n++){
+                        for(int m = 0; m < map_size; m++){
+                            printf("%2d", record[n][m]);
+                        }
+                        printf("\n");
+                    }*/
+                    while (record[route_x][route_y] != -1)
                     {
-                        walker[walk_num] = 1;
-                        route_x--;
+                        walk_num++;
+                        if (record[route_x][route_y] == 0)
+                        {
+                            walker[walk_num] = 0;
+                            route_y--;
+                        }
+                        else if (record[route_x][route_y] == 1)
+                        {
+                            walker[walk_num] = 1;
+                            route_x--;
+                        }
+                        else if (record[route_x][route_y] == 2)
+                        {
+                            walker[walk_num] = 2;
+                            route_y++;
+                        }
+                        else if (record[route_x][route_y] == 3)
+                        {
+                            walker[walk_num] = 3;
+                            route_x++;
+                        }
                     }
-                    else if (record[route_x][route_y] == 2)
+                    for (int u = walk_num; u >= 0; u--)
                     {
-                        walker[walk_num] = 2;
-                        route_y++;
+                        printf("%d", walker[u]);
                     }
-                    else if (record[route_x][route_y] == 3)
-                    {
-                        walker[walk_num] = 3;
-                        route_x++;
-                    }
-                }
-                for (int u = walk_num; u >= 0; u--)
-                {
-                    printf("%d", walker[u]);
                 }
                 return level + 1;
             }
@@ -330,7 +339,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
 }
 int main()
 {
-    int map_size, i, j, sum1, sum2, total_walk;
+    int map_size, i, j, sum[4], total_walk;
     int ball_1[2][2], ball_2[2][2];
     scanf("%d", &map_size);
     int m_array[map_size][map_size];
@@ -346,7 +355,18 @@ int main()
     scanf("%d %d %d %d", &ball_1[1][0], &ball_1[1][1], &ball_2[1][0], &ball_2[1][1]);
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     m_array[ball_2[1][0]][ball_2[1][1]] = 3;
-    sum1 = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+    sum[0] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+    sum[1] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_2[1][0], ball_2[1][1]);
+    sum[2] = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+    sum[3] = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
+    int min = sum[0];
+    int temp;
+    for(int j = 0 ; j < 4; j++){
+        if(sum[j] < min){
+            min = sum[j];
+            temp = j;
+        }
+    }
     if(check_hole = 2){
         check_hole = -1;
         m_array[ball_1[1][0]][ball_1[1][1]] = 0;
