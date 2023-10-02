@@ -353,12 +353,20 @@ int main()
     }
     scanf("%d %d %d %d", &ball_1[0][0], &ball_1[0][1], &ball_2[0][0], &ball_2[0][1]);
     scanf("%d %d %d %d", &ball_1[1][0], &ball_1[1][1], &ball_2[1][0], &ball_2[1][1]);
+    //m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+    //m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
-    m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[0] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+    m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+    m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[1] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_2[1][0], ball_2[1][1]);
+    m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+    m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     sum[2] = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+    m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+    m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[3] = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
+    m_array[ball_2[1][0]][ball_2[1][1]] = 0;
     int min = sum[0];
     int temp;
     for(int j = 0 ; j < 4; j++){
@@ -367,7 +375,43 @@ int main()
             temp = j;
         }
     }
-    if(check_hole = 2){
+    if(temp == 0){
+        print_check = 1;
+        m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+        short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+        m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+        m_array[ball_2[1][0]][ball_2[1][1]] = 3;
+        short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
+        m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+    }
+    else if(temp == 1){
+        print_check = 1;
+        m_array[ball_2[1][0]][ball_2[1][1]] = 3;
+        short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_2[1][0], ball_2[1][1]);
+        m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+        m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+        short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+        m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+    }
+    else if(temp == 2){
+        print_check = 1;
+        m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+        short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+        m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+        m_array[ball_2[1][0]][ball_2[1][1]] = 3;
+        short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_2[1][0], ball_2[1][1]);
+        m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+    }
+    else if(temp == 3){
+        print_check = 1;
+        m_array[ball_2[1][0]][ball_2[1][1]] = 3;
+        short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
+        m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+        m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+        short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+        m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+    }
+    /*if(check_hole = 2){
         check_hole = -1;
         m_array[ball_1[1][0]][ball_1[1][1]] = 0;
         m_array[ball_2[1][0]][ball_2[1][1]] = 0;
@@ -380,7 +424,7 @@ int main()
         m_array[ball_2[1][0]][ball_2[1][1]] = 0;
         m_array[ball_2[1][0]][ball_2[1][1]] = 3;
         sum2 = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
-    }
+    }*/
     /*for(int j = 0; j < sum; j++){
         printf("%d", walker[j]);
     }*/
