@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define R 30
+int check_hole = -1;//1是按原定，不是就是2
 
 struct _node
 {
@@ -95,14 +96,19 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 // printf("enqueue x= %d, y= %d, level= %d\n",x,y-1,level+1);
                 if(record[x][y - 1] == -1){
                     record[x][y - 1] = 2;
-                }
+                } 
                 enQueue(&que, x, y - 1, level + 1);
                 
                 //walker[walk_num] = 2;
             }
             else if (check_rep == 3){
-                int route_x = end_x;
-                int route_y = end_y;
+                int route_x = x;
+                int route_y = y - 1;
+                if(x == end_x && y - 1 == end_y){
+                    check_hole = 1;
+                }
+                else
+                    check_hole = 2;
                 int walker[map_size * map_size];
                 int walk_num = -1;
                 record[route_x][route_y] = 2; 
@@ -153,8 +159,14 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 //walker[walk_num] = 0;
             }
             else if (check_rep == 3){
-                int route_x = end_x;
-                int route_y = end_y;
+                int route_x = x;
+                int route_y = y + 1;
+                if (x == end_x && y + 1 == end_y)
+                {
+                    check_hole = 1;
+                }
+                else
+                    check_hole = 2;
                 int walker[map_size * map_size];
                 int walk_num = -1;
                 record[route_x][route_y] = 0;
@@ -206,8 +218,14 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 //walker[walk_num] = 3;
             }
             else if (check_rep == 3){
-                int route_x = end_x;
-                int route_y = end_y;
+                int route_x = x - 1;
+                int route_y = y;
+                if (x - 1 == end_x && y == end_y)
+                {
+                    check_hole = 1;
+                }
+                else
+                    check_hole = 2;
                 int walker[map_size * map_size];
                 int walk_num = -1;
                 record[route_x][route_y] = 3;
@@ -259,8 +277,14 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 //walker[walk_num] = 1;
             }
             else if (check_rep == 3){
-                int route_x = end_x;
-                int route_y = end_y;
+                int route_x = x + 1;
+                int route_y = y;
+                if (x + 1 == end_x && y == end_y)
+                {
+                    check_hole = 1;
+                }
+                else
+                    check_hole = 2;
                 int walker[map_size * map_size];
                 int walk_num = -1;
                 record[route_x][route_y] = 1;
@@ -321,15 +345,28 @@ int main()
     scanf("%d %d %d %d", &ball_1[0][0], &ball_1[0][1], &ball_2[0][0], &ball_2[0][1]);
     scanf("%d %d %d %d", &ball_1[1][0], &ball_1[1][1], &ball_2[1][0], &ball_2[1][1]);
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+    m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+    if(check_hole = 2){
+        check_hole = -1;
+        m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+        m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+        printf("\n");
+        m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+        short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+    }
+    else if(check_hole = 1){
+        check_hole = -1;
+        m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+        m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+        printf("\n");
+        m_array[ball_2[1][0]][ball_2[1][1]] = 3;
+        short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
+    }
     /*for(int j = 0; j < sum; j++){
         printf("%d", walker[j]);
     }*/
     //printf("%d", sum);
-    printf("\n");
-    m_array[ball_1[1][0]][ball_1[1][1]] = 0;
-    m_array[ball_2[1][0]][ball_2[1][1]] = 3;
-    short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
     /*for (int j = 0; j < sum; j++){
         printf("%d", walker[j]);
     }*/
