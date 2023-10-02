@@ -47,7 +47,7 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
     Node *head, *tail, *p, *target;
     int x, y, level, i, j;
     int check_rep;
-    int flag[map_size][map_size];
+    int flag[map_size][map_size];//初始化球走過的位置
     for (i = 0; i < map_size; i++)
     {
         for (j = 0; j < map_size; j++)
@@ -64,12 +64,12 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
     que.head = NULL;
     que.tail = NULL;
     que.size = 0;
-    int **record = malloc(map_size * sizeof(int *));
+    int **record = malloc(map_size * sizeof(int *));//紀錄上下左右
     for(int i = 0; i < map_size; i++) record[i] = malloc(map_size * sizeof(int));
     if(print_check != -1){
         for(int i = 0; i < map_size; i++){
             for(int j = 0; j < map_size; j++){
-                record[i][j] = -1;
+                record[i][j] = -1;//初始化為-1，起點為-1
             }
         }
     }
