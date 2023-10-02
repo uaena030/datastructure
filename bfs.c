@@ -358,13 +358,6 @@ int main()
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     sum[0] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
     m_array[ball_1[1][0]][ball_1[1][1]] = 0;
-    if (check_hole = 2)
-    {
-        check_hole = -1;
-        m_array[ball_1[1][0]][ball_1[1][1]] = 3;
-        short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
-    }
-
     m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[1] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_2[1][0], ball_2[1][1]);
     m_array[ball_2[1][0]][ball_2[1][1]] = 0;
@@ -382,11 +375,17 @@ int main()
             temp = j;
         }
     }
+    check_hole = -1;
     if(temp == 0){
         print_check = 1;
         m_array[ball_1[1][0]][ball_1[1][1]] = 3;
         short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
         m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+        if (check_hole = 2){
+            check_hole = -1;
+            m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+            short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
+        }
         m_array[ball_2[1][0]][ball_2[1][1]] = 3;
         short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
         m_array[ball_2[1][0]][ball_2[1][1]] = 0;
