@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define R 30
-int check_hole = -1;//1是按原定，不是就是2
+//int check_hole = -1;//1是按原定，不是就是2
 int print_check = -1;
 
 struct _node
@@ -106,11 +106,11 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 if(print_check != -1){
                     int route_x = x;
                     int route_y = y - 1;
-                    if(x == end_x && y - 1 == end_y){
+                    /*if(x == end_x && y - 1 == end_y){
                         check_hole = 1;
                     }
                     else
-                        check_hole = 2;
+                        check_hole = 2;*/
                     int walker[map_size * map_size];
                     int walk_num = -1;
                     record[route_x][route_y] = 2; 
@@ -165,12 +165,12 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 if (print_check != -1){
                     int route_x = x;
                     int route_y = y + 1;
-                    if (x == end_x && y + 1 == end_y)
+                    /*if (x == end_x && y + 1 == end_y)
                     {
                         check_hole = 1;
                     }
                     else
-                        check_hole = 2;
+                        check_hole = 2;*/
                     int walker[map_size * map_size];
                     int walk_num = -1;
                     record[route_x][route_y] = 0;
@@ -226,12 +226,12 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 if (print_check != -1){
                     int route_x = x - 1;
                     int route_y = y;
-                    if (x - 1 == end_x && y == end_y)
+                    /*if (x - 1 == end_x && y == end_y)
                     {
                         check_hole = 1;
                     }
                     else
-                        check_hole = 2;
+                        check_hole = 2;*/
                     int walker[map_size * map_size];
                     int walk_num = -1;
                     record[route_x][route_y] = 3;
@@ -287,12 +287,12 @@ int short_path(int *array, int start_x, int start_y, int map_size, int end_x, in
                 if (print_check != -1){
                     int route_x = x + 1;
                     int route_y = y;
-                    if (x + 1 == end_x && y == end_y)
+                    /*if (x + 1 == end_x && y == end_y)
                     {
                         check_hole = 1;
                     }
                     else
-                        check_hole = 2;
+                        check_hole = 2;*/
                     int walker[map_size * map_size];
                     int walk_num = -1;
                     record[route_x][route_y] = 1;
@@ -356,25 +356,17 @@ int main()
     //m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     //m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
-    m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[0] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
     m_array[ball_1[1][0]][ball_1[1][1]] = 0;
-    m_array[ball_2[1][0]][ball_2[1][1]] = 0;
     m_array[ball_2[1][0]][ball_2[1][1]] = 3;
-    m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     sum[1] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_2[1][0], ball_2[1][1]);
     m_array[ball_2[1][0]][ball_2[1][1]] = 0;
-    m_array[ball_1[1][0]][ball_1[1][1]] = 0;
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
-    m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[2] = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
     m_array[ball_1[1][0]][ball_1[1][1]] = 0;
-    m_array[ball_2[1][0]][ball_2[1][1]] = 0;
-    m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[3] = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
     m_array[ball_2[1][0]][ball_2[1][1]] = 0;
-    m_array[ball_1[1][0]][ball_1[1][1]] = 0;
     int min = sum[0];
     int temp;
     for(int j = 0 ; j < 4; j++){
@@ -383,17 +375,17 @@ int main()
             temp = j;
         }
     }
-    check_hole = -1;
+    //check_hole = -1;
     if(temp == 0){
         print_check = 1;
         m_array[ball_1[1][0]][ball_1[1][1]] = 3;
         short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
         m_array[ball_1[1][0]][ball_1[1][1]] = 0;
-        if (check_hole = 2){
+        /*if (check_hole = 2){
             check_hole = -1;
             m_array[ball_1[1][0]][ball_1[1][1]] = 3;
             short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
-        }
+        }*/
         m_array[ball_2[1][0]][ball_2[1][1]] = 3;
         short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
         m_array[ball_2[1][0]][ball_2[1][1]] = 0;
