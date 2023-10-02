@@ -356,17 +356,25 @@ int main()
     //m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     //m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+    m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[0] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_1[1][0], ball_1[1][1]);
     m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+    m_array[ball_2[1][0]][ball_2[1][1]] = 0;
     m_array[ball_2[1][0]][ball_2[1][1]] = 3;
+    m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     sum[1] = short_path((int *)m_array, ball_1[0][0], ball_1[0][1], map_size, ball_2[1][0], ball_2[1][1]);
     m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+    m_array[ball_1[1][0]][ball_1[1][1]] = 0;
     m_array[ball_1[1][0]][ball_1[1][1]] = 3;
+    m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[2] = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_1[1][0], ball_1[1][1]);
     m_array[ball_1[1][0]][ball_1[1][1]] = 0;
+    m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+    m_array[ball_1[1][0]][ball_1[1][1]] = 3;
     m_array[ball_2[1][0]][ball_2[1][1]] = 3;
     sum[3] = short_path((int *)m_array, ball_2[0][0], ball_2[0][1], map_size, ball_2[1][0], ball_2[1][1]);
     m_array[ball_2[1][0]][ball_2[1][1]] = 0;
+    m_array[ball_1[1][0]][ball_1[1][1]] = 0;
     int min = sum[0];
     int temp;
     for(int j = 0 ; j < 4; j++){
