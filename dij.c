@@ -146,7 +146,7 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int*
                     (*src_oty)--;
                 }
             }
-            //printf("\nx = %d ,y = %d\n", (*src_otx), (*src_oty));
+            //printf("x = %d ,y = %d\n", (*src_otx), (*src_oty));
         }
 }
 
@@ -176,12 +176,13 @@ int main()
     int src1[2], src2[2], dst1[2], dst2[2]; //compare[4];
     scanf("%d %d %d %d", &src1[0], &src1[1], &src2[0], &src2[1]);
     scanf("%d %d %d %d", &dst1[0], &dst1[1], &dst2[0], &dst2[1]);
-
-
-    dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n, &src1[0], &src1[1]);
-    //printf("\nsrc1_x = %d, src1_y = %d\n", src1[0], src1[1]);
+    int new_x = n - 1 - src1[0];
+    int new_y = src1[1];
+    
+    dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n, &new_x, &new_y);
+    //printf("src1_x = %d, src1_y = %d\n", new_x, new_y);
     check = 1;
-    dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n, &src1[0], &src1[1]);
+    dijkstra(new_x, new_y, n - 1 - dst1[1], dst1[0], maze, n, &src1[0], &src1[1]);
     return 0;
     // test
     // printf("---------------------------\n");
