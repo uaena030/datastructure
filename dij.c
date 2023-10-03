@@ -28,6 +28,7 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int*
     // printf("Hello, world!\n");
     // print_maze(maze, size);
     // initialize the distance table
+    //printf("%d %d %d %d\n", (*src_otx)-1, (*src_oty)-1, (*src_oty)+1, (*src_otx)+1);
     int **distance = malloc(size * sizeof(int *));
     for (int i = 0; i < size; i++)
         distance[i] = malloc(size * sizeof(int));
@@ -126,32 +127,26 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int*
         }
         // else printf("---------\nError\n--------\n");
     }
-    /*
-    if(check_point == -1){
-        return count;
-    }*/
-    //if(check_point != -1){
         for (int i = distance[dstx][dsty] - 1; i >= 0; i--)
         {
             printf("%d", route[i]);
             if(check == -1){
-                if(route[i] == 0 && distance[(*src_otx)--][*src_oty] != -2){
-                    (*src_otx)--;
+                if(route[i] == 0 && distance[(*src_otx)-1][*src_oty] != -2){
+                    (*src_otx)-1;
                 }
-                else if (route[i] == 1 && distance[*src_otx][(*src_oty)++] != -2){
-                    (*src_oty)++;
+                else if (route[i] == 1 && distance[*src_otx][(*src_oty)+1] != -2){
+                    (*src_oty)+1;
                 }
-                else if (route[i] == 2 && distance[(*src_otx)++][*src_oty] != -2)
+                else if (route[i] == 2 && distance[(*src_otx)+1][*src_oty] != -2)
                 {
-                    (*src_otx)++;
+                    (*src_otx)+1;
                 }
-                else if (route[i] == 3 && distance[*src_otx][(*src_oty)--] != -2)
+                else if (route[i] == 3 && distance[*src_otx][(*src_oty)-1] != -2)
                 {
-                    (*src_oty)--;
+                    (*src_oty)-1;
                 }
             }
         }
-    //}
 }
 
 int main()
@@ -180,10 +175,8 @@ int main()
     int src1[2], src2[2], dst1[2], dst2[2]; //compare[4];
     scanf("%d %d %d %d", &src1[0], &src1[1], &src2[0], &src2[1]);
     scanf("%d %d %d %d", &dst1[0], &dst1[1], &dst2[0], &dst2[1]);
-    int src_otx = src2[0];
-    int src_oty = src2[1];
 
-    dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n, &src_otx, &src_oty);
+    dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n, &src2[0], &src2[1]);
     check = 1;
     dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n, 0, 0);
 
