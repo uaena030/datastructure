@@ -182,7 +182,7 @@ int main()
     dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n, &new_x, &new_y);
     //printf("src1_x = %d, src1_y = %d\n", new_x, new_y);
     check = 1;
-    dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n, &src1[0], &src1[1]);
+    dijkstra(new_x, new_y, n - 1 - dst1[1], dst1[0], maze, n, &src1[0], &src1[1]);
     return 0;
     // test
     // printf("---------------------------\n");
