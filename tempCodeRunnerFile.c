@@ -1,1 +1,2 @@
-check_rep = *(array + x * map_size + y - 1);
+int src_otx = src2[0];
+    int src_oty = src2[1];

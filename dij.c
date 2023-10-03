@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 //int check_point = -1;
+int check = -1;
 
 void print_maze(int **maze, int n)
 {
@@ -21,7 +22,8 @@ typedef struct node
     int y;
 } node;
 
-void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size)
+
+void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int* src_otx, int* src_oty)
 {
     // printf("Hello, world!\n");
     // print_maze(maze, size);
@@ -132,6 +134,22 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size)
         for (int i = distance[dstx][dsty] - 1; i >= 0; i--)
         {
             printf("%d", route[i]);
+            if(check == -1){
+                if(route[i] == 0 && distance[(*src_otx)--][*src_oty] != -2){
+                    (*src_otx)--;
+                }
+                else if (route[i] == 1 && distance[*src_otx][(*src_oty)++] != -2){
+                    (*src_oty)++;
+                }
+                else if (route[i] == 2 && distance[(*src_otx)++][*src_oty] != -2)
+                {
+                    (*src_otx)++;
+                }
+                else if (route[i] == 3 && distance[*src_otx][(*src_oty)--] != -2)
+                {
+                    (*src_oty)--;
+                }
+            }
         }
     //}
 }
@@ -162,9 +180,12 @@ int main()
     int src1[2], src2[2], dst1[2], dst2[2]; //compare[4];
     scanf("%d %d %d %d", &src1[0], &src1[1], &src2[0], &src2[1]);
     scanf("%d %d %d %d", &dst1[0], &dst1[1], &dst2[0], &dst2[1]);
+    int src_otx = src2[0];
+    int src_oty = src2[1];
 
-    dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n);
-    dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n);
+    dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n, &src_otx, &src_oty);
+    check = 1;
+    dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n, 0, 0);
 
     /* need to move src2 to new space */
     /*compare[0] = dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n);
