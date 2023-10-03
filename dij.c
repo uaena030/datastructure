@@ -132,20 +132,21 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int*
             printf("%d", route[i]);
             if(check == -1){
                 if(route[i] == 0 && distance[(*src_otx)-1][*src_oty] != -2){
-                    (*src_otx)-1;
+                    (*src_otx)--;
                 }
                 else if (route[i] == 1 && distance[*src_otx][(*src_oty)+1] != -2){
-                    (*src_oty)+1;
+                    (*src_oty)++;
                 }
                 else if (route[i] == 2 && distance[(*src_otx)+1][*src_oty] != -2)
                 {
-                    (*src_otx)+1;
+                    (*src_otx)++;
                 }
                 else if (route[i] == 3 && distance[*src_otx][(*src_oty)-1] != -2)
                 {
-                    (*src_oty)-1;
+                    (*src_oty)--;
                 }
             }
+            //printf("x = %d ,y = %d\n", (*src_otx), (*src_oty));
         }
 }
 
@@ -175,50 +176,10 @@ int main()
     int src1[2], src2[2], dst1[2], dst2[2]; //compare[4];
     scanf("%d %d %d %d", &src1[0], &src1[1], &src2[0], &src2[1]);
     scanf("%d %d %d %d", &dst1[0], &dst1[1], &dst2[0], &dst2[1]);
-
+    
     dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n, &src2[0], &src2[1]);
     check = 1;
-    dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n, 0, 0);
-
-    /* need to move src2 to new space */
-    /*compare[0] = dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n);
-    compare[1] = dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst2[1], dst2[0], maze, n);
-    compare[2] = dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n);
-    compare[3] = dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst1[1], dst1[0], maze, n);
-
-    int min = compare[0], temp = 0;
-    for(int j = 0; j < 4; j++){
-        if(compare[j] < min){
-            min = compare[j];
-            temp = j;
-        }
-    }
-    check_point = 2;
-    switch (temp){
-    case 0:{
-        dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n);
-        dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n);
-        break;
-    } 
-    case 1:{
-        dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst2[1], dst2[0], maze, n);
-        dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst1[1], dst1[0], maze, n);
-        break;
-    }
-    case 2:{
-        dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n);
-        dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n);
-        break;
-    }
-    case 3:{
-        dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst1[1], dst1[0], maze, n);
-        dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst2[1], dst2[0], maze, n);
-        break;
-    }
-    default:
-        break;
-    }
-    */
+    dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n, &src2[0], &src2[1]);
     return 0;
     // test
     // printf("---------------------------\n");
