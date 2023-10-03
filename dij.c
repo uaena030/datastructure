@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-//int check_point = -1;
+// int check_point = -1;
 int check = -1;
 
 void print_maze(int **maze, int n)
@@ -22,13 +22,12 @@ typedef struct node
     int y;
 } node;
 
-
-void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int* src_otx, int* src_oty)
+void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int src_otx, int src_oty)
 {
     // printf("Hello, world!\n");
     // print_maze(maze, size);
     // initialize the distance table
-    //printf("%d %d %d %d\n", (*src_otx)-1, (*src_oty)-1, (*src_oty)+1, (*src_otx)+1);
+    // printf("%d %d %d %d\n", (*src_otx)-1, (*src_oty)-1, (*src_oty)+1, (*src_otx)+1);
     int **distance = malloc(size * sizeof(int *));
     for (int i = 0; i < size; i++)
         distance[i] = malloc(size * sizeof(int));
@@ -101,10 +100,10 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int*
     int *route = calloc(distance[dstx][dsty], sizeof(int));
     int now_x = dstx;
     int now_y = dsty;
-    //int count = 0;
+    // int count = 0;
     for (int i = 0; i < distance[dstx][dsty]; i++)
     {
-        //count++;
+        // count++;
         if (distance[now_x + 1][now_y] == distance[now_x][now_y] - 1)
         {
             route[i] = 0;
@@ -127,27 +126,31 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int*
         }
         // else printf("---------\nError\n--------\n");
     }
-        for (int i = distance[dstx][dsty] - 1; i >= 0; i--)
+    for (int i = distance[dstx][dsty] - 1; i >= 0; i--)
+    {
+        //printf("src1_x = %d, src1_y = %d\n", src_otx, src_oty);
+        printf("%d", route[i]);
+        if (check == -1)
         {
-            printf("%d", route[i]);
-            if(check == -1){
-                if(route[i] == 0 && distance[(*src_otx)-1][*src_oty] != -2){
-                    (*src_otx)--;
-                }
-                else if (route[i] == 1 && distance[*src_otx][(*src_oty)+1] != -2){
-                    (*src_oty)++;
-                }
-                else if (route[i] == 2 && distance[(*src_otx)+1][*src_oty] != -2)
-                {
-                    (*src_otx)++;
-                }
-                else if (route[i] == 3 && distance[*src_otx][(*src_oty)-1] != -2)
-                {
-                    (*src_oty)--;
-                }
+            if (route[i] == 0 && maze[src_otx - 1][src_oty] != 1)
+            {
+                src_otx--;
             }
-            //printf("x = %d ,y = %d\n", (*src_otx), (*src_oty));
+            else if (route[i] == 1 && maze[src_otx][src_oty + 1] != 1)
+            {
+                src_oty++;
+            }
+            else if (route[i] == 2 && maze[src_otx + 1][src_oty] != 1)
+            {
+                src_otx++;
+            }
+            else if (route[i] == 3 && maze[src_otx][src_oty - 1] != 1)
+            {
+                src_oty--;
+            }
         }
+        //printf("x = %d ,y = %d\n", src_otx, src_oty);
+    }
 }
 
 int main()
@@ -173,16 +176,17 @@ int main()
     }
 
     // input start & end point
-    int src1[2], src2[2], dst1[2], dst2[2]; //compare[4];
+    int src1[2], src2[2], dst1[2], dst2[2]; // compare[4];
     scanf("%d %d %d %d", &src1[0], &src1[1], &src2[0], &src2[1]);
     scanf("%d %d %d %d", &dst1[0], &dst1[1], &dst2[0], &dst2[1]);
-    int new_x = n - 1 - src1[0];
-    int new_y = src1[1];
-    
-    dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n, &new_x, &new_y);
+    int new_x = n - 1 - src2[1];
+    int new_y = src2[0];
+
+    //printf("src1_x = %d, src1_y = %d\n", new_x, new_y);
+    dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n, new_x, new_y);
     //printf("src1_x = %d, src1_y = %d\n", new_x, new_y);
     check = 1;
-    dijkstra(new_x, new_y, n - 1 - dst1[1], dst1[0], maze, n, &src1[0], &src1[1]);
+    dijkstra(new_x, new_y, n - 1 - dst2[1], dst2[0], maze, n, src2[0], src2[1]);
     return 0;
     // test
     // printf("---------------------------\n");
