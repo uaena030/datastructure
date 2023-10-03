@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+//int check_point = -1;
 
 void print_maze(int **maze, int n)
 {
@@ -97,8 +98,10 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size)
     int *route = calloc(distance[dstx][dsty], sizeof(int));
     int now_x = dstx;
     int now_y = dsty;
+    //int count = 0;
     for (int i = 0; i < distance[dstx][dsty]; i++)
     {
+        //count++;
         if (distance[now_x + 1][now_y] == distance[now_x][now_y] - 1)
         {
             route[i] = 0;
@@ -121,11 +124,16 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size)
         }
         // else printf("---------\nError\n--------\n");
     }
-    for (int i = distance[dstx][dsty] - 1; i >= 0; i--)
-    {
-        printf("%d", route[i]);
-    }
-    printf("\n");
+    /*
+    if(check_point == -1){
+        return count;
+    }*/
+    //if(check_point != -1){
+        for (int i = distance[dstx][dsty] - 1; i >= 0; i--)
+        {
+            printf("%d", route[i]);
+        }
+    //}
 }
 
 int main()
@@ -151,14 +159,53 @@ int main()
     }
 
     // input start & end point
-    int src1[2], src2[2], dst1[2], dst2[2];
+    int src1[2], src2[2], dst1[2], dst2[2]; //compare[4];
     scanf("%d %d %d %d", &src1[0], &src1[1], &src2[0], &src2[1]);
     scanf("%d %d %d %d", &dst1[0], &dst1[1], &dst2[0], &dst2[1]);
 
+    dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n);
     dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n);
-    /* need to move src2 to new space */
-    // dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze);
 
+    /* need to move src2 to new space */
+    /*compare[0] = dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n);
+    compare[1] = dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst2[1], dst2[0], maze, n);
+    compare[2] = dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n);
+    compare[3] = dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst1[1], dst1[0], maze, n);
+
+    int min = compare[0], temp = 0;
+    for(int j = 0; j < 4; j++){
+        if(compare[j] < min){
+            min = compare[j];
+            temp = j;
+        }
+    }
+    check_point = 2;
+    switch (temp){
+    case 0:{
+        dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n);
+        dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n);
+        break;
+    } 
+    case 1:{
+        dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst2[1], dst2[0], maze, n);
+        dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst1[1], dst1[0], maze, n);
+        break;
+    }
+    case 2:{
+        dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst2[1], dst2[0], maze, n);
+        dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n);
+        break;
+    }
+    case 3:{
+        dijkstra(n - 1 - src2[1], src2[0], n - 1 - dst1[1], dst1[0], maze, n);
+        dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst2[1], dst2[0], maze, n);
+        break;
+    }
+    default:
+        break;
+    }
+    */
+    return 0;
     // test
     // printf("---------------------------\n");
     // print_maze(maze, n);
