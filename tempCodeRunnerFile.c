@@ -1,2 +1,7 @@
-int src_otx = src2[0];
-    int src_oty = src2[1];
+for(int i = 0; i < size; i++){
+        //     for(int j = 0; j < size; j++){
+        //         printf("%d ", distance[i][j]);
+        //     }
+        //     printf("\n");
+        // }
+        // printf("-------------------------------------------------------\n");
