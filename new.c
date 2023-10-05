@@ -10,7 +10,7 @@ typedef struct node
     int y;
 } node;
 
-void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int src_otx, int src_oty, int ot_dst_x, int ot_dst_y)
+void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int* src_otx, int* src_oty, int ot_dst_x, int ot_dst_y)
 {
     int **distance = malloc(size * sizeof(int *));
     for (int i = 0; i < size; i++)
@@ -135,28 +135,29 @@ void dijkstra(int srcx, int srcy, int dstx, int dsty, int **maze, int size, int 
         if (check == -1)
         {
             //printf("Evoke ball2 route\n");
-            if (route[i] == 0 && maze[src_otx - 1][src_oty] != 1)
+            if (route[i] == 0 && maze[*(src_otx) - 1][*(src_oty)] != 1)
             {
-                src_otx--;
+                (*src_otx)--;
             }
-            else if (route[i] == 1 && maze[src_otx][src_oty + 1] != 1)
+            else if (route[i] == 1 && maze[*(src_otx)][*(src_oty) + 1] != 1)
             {
-                src_oty++;
+                (*src_oty)++;
             }
-            else if (route[i] == 2 && maze[src_otx + 1][src_oty] != 1)
+            else if (route[i] == 2 && maze[*(src_otx) + 1][*(src_oty)] != 1)
             {
-                src_otx++;
+                (*src_otx)++;
             }
-            else if (route[i] == 3 && maze[src_otx][src_oty - 1] != 1)
+            else if (route[i] == 3 && maze[*(src_otx)][*(src_oty) - 1] != 1)
             {
-                src_oty--;
+                (*src_oty)--;
             }
-            //printf("x = %d y = %d\n", *src_otx, *src_oty);
-            if(temp_x == src_otx && temp_y == src_oty){
+            if (temp_x == *(src_otx) && temp_y == *(src_oty))
+            {
                 break;
             }
         }
     }
+    //printf("x = %d y = %d\n", *(src_otx), *(src_oty));
 }
 
 int main()
@@ -191,16 +192,16 @@ int main()
     int second_y = src1[0];
 
     
-    dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n, new_x, new_y, n - 1 - dst2[1], dst2[0]);
+    dijkstra(n - 1 - src1[1], src1[0], n - 1 - dst1[1], dst1[0], maze, n, &new_x, &new_y, n - 1 - dst2[1], dst2[0]);
     // printf("1\n");
     check = 1;
-    printf("\n");
-    //printf("nx = %d ny = %d\n", 10 - new_y, new_x);
+    //printf("\n");
+    //printf("nx = %d ny = %d\n", new_x, new_y);
     if(pause == -1){
-        dijkstra(new_x, new_y, n - 1 - dst2[1], dst2[0], maze, n, second_x, second_y, -100, -100);
+        dijkstra(new_x, new_y, n - 1 - dst2[1], dst2[0], maze, n, &second_x, &second_y, -100, -100);
     }
     else if(pause == 0){
-        dijkstra(new_x, new_y, n - 1 - dst1[1], dst1[0], maze, n, second_x, second_y, -100, -100);
+        dijkstra(new_x, new_y, n - 1 - dst1[1], dst1[0], maze, n, &second_x, &second_y, -100, -100);
     }
     return 0;
 }
