@@ -49,7 +49,7 @@ void judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int 
                 if(ini_array[dst] != -1){//該點在路徑1已指向其他點(非新路徑)(更換原路徑)
                     if(dcheck != -1)change_origin_path(dst, val, fin_array,  end_array);
                     //printf("\n");
-                    print_path(node, end_array);
+                    //print_path(node, end_array);
                     break;
                 }
                 end_array[dst] = val;
