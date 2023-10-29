@@ -2,10 +2,11 @@
 #include <stdlib.h>
 void initial_npath(int node, int *array);
 void update_route(int node, int *ini_array, int *fin_array, int *end_array);
-void judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int *end_array);
+int judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int *end_array);
 void change_origin_path(int dst, int val, int *fin_array, int *end_array);
 void print_path(int node, int *end);
 int dcheck = -1;//確認是否為新增節點後的step
+int print_count = 0;
 
 void initial_npath(int node, int *array){//初始化
     for(int i = 0; i < node; i ++){
@@ -21,7 +22,7 @@ void update_route(int node, int *ini_array, int *fin_array, int *end_array){//�
         for (int i = 0; i < node; i++)
         {
             if(check == 0){
-                if(fin_array[i] == pri_temp_dst){//有其他點指到該點
+                if(fin_array[i] == pri_temp_dst){//有其他點指到該點(有分支)
                     judge_node(node, pri_temp_dst, pri_temp_val, ini_array, fin_array, end_array);
                     check++;
                 }
@@ -35,19 +36,27 @@ void update_route(int node, int *ini_array, int *fin_array, int *end_array){//�
             }
             //printf("%d\n",check);
         }
+        //printf("\n");
     }
 }
 
-void judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int *end_array){
+int judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int *end_array){
     while(dst != 0){
         for(int i = 0; i < node; i++){
             if (fin_array[i] == dst){
                 dst = i;
                 val = fin_array[i];
                 if(ini_array[dst] != -1){//該點在路徑1已指向其他點(非新路徑)(更換原路徑)
-                    if(dcheck != -1)change_origin_path(dst, val, fin_array,  end_array);
-                    //printf("\n");
-                    print_path(node, end_array);
+                    if(dcheck != -1){
+                        if(end_array[dst] == fin_array[dst]){
+                            return 0;
+                        }
+                        change_origin_path(dst, val, fin_array, end_array); // 按理來說每次change path都能輸出新的路徑
+                        print_count++;
+                        print_path(node, end_array);
+                        //printf("k\n");
+                        return 0;       
+                    }
                     break;
                 }
                 end_array[dst] = val;
@@ -55,6 +64,7 @@ void judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int 
             }
         }
     }
+    return 0;
     //print_path(node, end_array);
     //printf("\n");
 }
@@ -90,13 +100,15 @@ int main(){
         printf("%d ", final[i]);
     }
     */
-    //printf("4\n");
-    //print_path(node, initial);
+    //printf("6\n");
+    print_path(node, initial);
     update_route(node, initial, final, end);
-    print_path(node, end);
+    //print_path(node, end);
+    //printf("1st\n");
     dcheck++;
     update_route(node, end, final, end);
-    print_path(node, end);
-    //print_path(node, final);
+    //print_path(node, end);
+    print_path(node, final);
+    printf("%d\n", print_count + 2);
     return 0;
 }
