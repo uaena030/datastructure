@@ -28,9 +28,6 @@ void update_route(int node, int *ini_array, int *fin_array, int *end_array){//�
                     check++;
                 }
             }
-            /*if (end_array[pri_temp_dst] != -1){ //該點已指向其他點(需更換原路徑)(之後做)
-                change_origin_path(pri_temp_dst, pri_temp_val, end_array);
-            }*/
             if (ini_array[i] == pri_temp_dst){//無分支，原路徑
                 pri_temp_dst = i;
                 pri_temp_val = ini_array[i];
@@ -49,9 +46,10 @@ void judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int 
             if (fin_array[i] == dst){
                 dst = i;
                 val = fin_array[i];
-                if(ini_array[dst] != -1){//該點在路徑1已指向其他點(非新路徑)(需更換原路徑)(之後做)
+                if(ini_array[dst] != -1){//該點在路徑1已指向其他點(非新路徑)(更換原路徑)
                     if(dcheck != -1)change_origin_path(dst, val, fin_array,  end_array);
                     //printf("\n");
+                    print_path(node, end_array);
                     break;
                 }
                 end_array[dst] = val;
@@ -63,7 +61,7 @@ void judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int 
     //printf("\n");
 }
 
-void change_origin_path(int dst, int val, int *fin_array, int *end_array){
+void change_origin_path(int dst, int val, int *fin_array, int *end_array){//原路徑1改為路徑2
     end_array[dst] = fin_array[dst];
 }
 
@@ -75,7 +73,7 @@ void print_path(int node, int *end){
 }
 
 int main(){
-    int node, time = 2;
+    int node;
     scanf("%d\n", &node);
     //initialize path1 and path2
     int initial[node], final[node], end[node];
@@ -94,12 +92,13 @@ int main(){
         printf("%d ", final[i]);
     }
     */
-    //print_path(node, initial);
+    printf("4\n");
+    print_path(node, initial);
     update_route(node, initial, final, end);
     print_path(node, end);
     dcheck++;
     update_route(node, end, final, end);
     print_path(node, end);
-    //print_path(node, final);
+    print_path(node, final);
     return 0;
 }
