@@ -3,8 +3,9 @@
 void initial_npath(int node, int *array);
 void update_route(int node, int *ini_array, int *fin_array, int *end_array);
 void judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int *end_array);
-void change_origin_path(int dst, int val, int *end_array);
+void change_origin_path(int dst, int val, int *fin_array, int *end_array);
 void print_path(int node, int *end);
+int dcheck = -1;
 
 void initial_npath(int node, int *array){//初始化
     for(int i = 0; i < node; i ++){
@@ -20,7 +21,7 @@ void update_route(int node, int *ini_array, int *fin_array, int *end_array){//�
         for (int i = 0; i < node; i++)
         {
             if(check == 0){
-                if(fin_array[i] == pri_temp_dst){//路線二的點指到該點
+                if(fin_array[i] == pri_temp_dst){//有其他點指到該點
                     int dst = pri_temp_dst;
                     int val = pri_temp_val;
                     judge_node(node, dst, val, ini_array, fin_array, end_array);
@@ -39,7 +40,6 @@ void update_route(int node, int *ini_array, int *fin_array, int *end_array){//�
             }
             //printf("%d\n",check);
         }
-        print_path(node, end_array);
     }
 }
 
@@ -49,8 +49,9 @@ void judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int 
             if (fin_array[i] == dst){
                 dst = i;
                 val = fin_array[i];
-                if(ini_array[dst] != -1){//該點已指向其他點(需更換原路徑)(之後做)
-                    //change_origin_path(dst, val, end_array);
+                if(ini_array[dst] != -1){//該點在路徑1已指向其他點(非新路徑)(需更換原路徑)(之後做)
+                    if(dcheck != -1)change_origin_path(dst, val, fin_array,  end_array);
+                    //printf("\n");
                     break;
                 }
                 end_array[dst] = val;
@@ -58,11 +59,13 @@ void judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int 
             }
         }
     }
+    //print_path(node, end_array);
+    //printf("\n");
 }
 
-/*void change_origin_path(int dst, int val, int *end_array){
-    end_array[dst] = val;
-}*/
+void change_origin_path(int dst, int val, int *fin_array, int *end_array){
+    end_array[dst] = fin_array[dst];
+}
 
 void print_path(int node, int *end){
     for(int i = 0; i < node; i++){
@@ -93,6 +96,10 @@ int main(){
     */
     //print_path(node, initial);
     update_route(node, initial, final, end);
+    print_path(node, end);
+    dcheck++;
+    update_route(node, end, final, end);
+    print_path(node, end);
     //print_path(node, final);
     return 0;
 }
