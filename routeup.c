@@ -23,26 +23,28 @@ void update_route(int node, int *ini_array, int *fin_array, int *end_array){//�
         for (int i = 0; i < node; i++)
         {
             if(check == 0){//沒做過(加新路線)這個步驟
-                if(fin_array[i] == pri_temp_dst){//路線2有其他點指到該點(有分支)
+                if(fin_array[i] == pri_temp_dst){//路線2有其他點指到該點(有分支)(有問題，因為有可能位元比ini後面)
                     judge_node(node, pri_temp_dst, pri_temp_val, ini_array, fin_array, end_array);
                     int dst_how = 0;
                     for(int j = i; j < node; j++){
                         if(fin_array[j] == pri_temp_dst || ini_array[j] == pri_temp_dst){dst_how++;}
                     }
-                    if(dst_how == 1){
+                    if(dst_how == 1){//fin或ini之後會有其他點指向該點
                         check++;//bug:>=1以上的點指向該點
                     }
-                    else{
+                    else{//只有ini指向該點
                         dst_how--;
                     }
                 }
             }
-            if (ini_array[i] == pri_temp_dst){//無分支，原路徑
-                pri_temp_dst = i;
-                pri_temp_val = ini_array[i];
-                end_array[pri_temp_dst] = pri_temp_val;
-                check = 0;
-                //printf("dst: %d, val: %d\n",pri_temp_dst,pri_temp_val);
+            if(i == node - 1){
+                if (ini_array[i] == pri_temp_dst){//無分支，原路徑
+                        pri_temp_dst = i;
+                        pri_temp_val = ini_array[i];
+                        end_array[pri_temp_dst] = pri_temp_val;
+                        check = 0;
+                    //printf("dst: %d, val: %d\n",pri_temp_dst,pri_temp_val);
+                }
             }
             //printf("%d\n",check);
         }
