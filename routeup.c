@@ -7,6 +7,7 @@ void change_origin_path(int dst, int val, int *fin_array, int *end_array);
 void print_path(int node, int *end);
 int dcheck = -1;//確認是否為新增節點後的step
 int print_count = 0;
+int stack_route[100][100];
 
 void initial_npath(int node, int *array){//初始化
     for(int i = 0; i < node; i ++){
@@ -16,7 +17,7 @@ void initial_npath(int node, int *array){//初始化
 
 void update_route(int node, int *ini_array, int *fin_array, int *end_array){//新增節點
     int pri_temp_val = -1;//initial prior point value
-    int pri_temp_dst = 11;//initial prior point destination
+    int pri_temp_dst = node - 1;//initial prior point destination
     int check = 0;
     while(pri_temp_dst != 0){//起點前沒東西，break
         for (int i = 0; i < node; i++)
@@ -52,8 +53,11 @@ int judge_node(int node, int dst, int val, int *ini_array, int *fin_array, int *
                             return 0;
                         }
                         change_origin_path(dst, val, fin_array, end_array); // 按理來說每次change path都能輸出新的路徑
+                        for(int j = 0; j < node; j++){
+                            stack_route[print_count][j] = end_array[j];
+                        }
                         print_count++;
-                        print_path(node, end_array);
+                        //print_path(node, end_array);
                         //printf("k\n");
                         return 0;       
                     }
@@ -101,14 +105,20 @@ int main(){
     }
     */
     //printf("6\n");
-    print_path(node, initial);
     update_route(node, initial, final, end);
     //print_path(node, end);
     //printf("1st\n");
     dcheck++;
     update_route(node, end, final, end);
+    printf("%d\n", print_count + 2);
+    print_path(node, initial);
+    for(int i = 0; i < print_count; i++){
+        for(int j = 0; j < node; j++){
+            printf("%d ", stack_route[i][j]);
+        }
+        printf("\n");
+    }
     //print_path(node, end);
     print_path(node, final);
-    printf("%d\n", print_count + 2);
     return 0;
 }
