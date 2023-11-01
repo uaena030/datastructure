@@ -5,7 +5,7 @@ void update_route(int node, int *ini_array, int *fin_array, int *end_array);
 void print_path(int node, int *end);
 int dcheck = -1;//確認是否為新增節點後的step
 int print_count = 0;
-int stack_route[100000][100000];
+int stack_route[6000][6000];
 
 void initial_npath(int node, int *array){//初始化
     for(int i = 0; i < node; i ++){
