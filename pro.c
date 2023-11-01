@@ -90,7 +90,6 @@ int skipCount(int i){// return the number that will skip on the new path
     return count;
 }
 
-
 void checkBackward(void){ //check if this new path is backward, which will induce cycle
     int current, dest;
     for(int i=0;i<n;i++){
@@ -120,8 +119,6 @@ void addShortcut(int node){// add node to 'shortcut queue'
     push(ans, node);
     updateCounter++;
 }
-
-
 
 void pruneFunction(void){// update the nodes that're on the skipped shortcut
     while(!isEmpty(shortcut)){
