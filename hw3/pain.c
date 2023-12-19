@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+int step;
 
 typedef struct node
 {
@@ -8,7 +9,7 @@ typedef struct node
     int y;
 } node;
 
-void BFS(int src, int end, int **maze, int size){
+int* BFS(int src, int end, int **maze, int size){
     int **distance = malloc(size * sizeof(int *));
     for (int i = 0; i < size; i++)
         distance[i] = malloc(size * sizeof(int));
@@ -50,28 +51,29 @@ void BFS(int src, int end, int **maze, int size){
             }
         }
         head++;
-        printf("node_x = %d, node_y = %d\n", node_x, node_y);
+        //printf("node_x = %d, node_y = %d\n", node_x, node_y);
     }
     // generate route
     int *route = malloc((1000000) * sizeof(int));
     int now_x = end;
     int now_y = end;
-    printf("total step is : %d\n", distance[end][end]);
-    int step = distance[end][end];
+    //printf("total step is : %d\n", distance[end][end]);
+    step = distance[end][end];
     for (int i = 0; i < step; i++){
         for(int j = 0; j < size; j++){
             if(distance[j][now_x] == distance[now_x][now_y] - 1){
                 route[i] = now_x;
                 now_y = now_x;
                 now_x = j;
-                j = 0;
+                break;
             }
         }
     }
-    for (int i = step - 1; i >= 0; i--){
+    return route;
+    /*for (int i = step - 1; i >= 0; i--){
         printf("%d ", route[i]);
     }
-    printf("\n");
+    printf("\n");*/
 }
 
 int main(){
@@ -101,7 +103,7 @@ int main(){
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
             if(Reqmem[i][j] == true){
-                BFS(i, j, Linkmem, Nodes);
+                int BFSresult = BFS(i, j, Linkmem, Nodes);
             }
         }
     }

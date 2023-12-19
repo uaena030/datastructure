@@ -1,2 +1,1 @@
-j++){
-            if(Reqmem[i][j] == true
+route[i] = now_x;
