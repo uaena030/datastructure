@@ -23,6 +23,7 @@ void BFS(int src, int end, int **maze, int size){
         }
     }
     distance[src][src] = 0;// starting point
+    distance[end][end] = -1;// ending point
 
     node queue[size * size + 1];
     int head = 0, tail = 1;
@@ -39,31 +40,35 @@ void BFS(int src, int end, int **maze, int size){
         }
         for(int i = 0; i < size; i++){
             if(distance[node_y][i] == -1){
-                queue[tail].x = node_y;
-                queue[tail].y = i;
-                distance[node_y][i] = distance[node_x][node_y] + 1;
-                node_x = node_y; //start linked point reset
+                //node_x = 0 0
+                queue[tail].x = node_y;//0 1
+                queue[tail].y = i;//1
+                distance[node_y][i] = distance[node_x][node_y] + 1;//00 01 12
+                node_x = node_y;
+                node_y = i;
                 tail++;
             }
         }
         head++;
+        printf("node_x = %d, node_y = %d\n", node_x, node_y);
     }
     // generate route
     int *route = malloc((1000000) * sizeof(int));
     int now_x = end;
     int now_y = end;
+    printf("total step is : %d\n", distance[end][end]);
     int step = distance[end][end];
     for (int i = 0; i < step; i++){
         for(int j = 0; j < size; j++){
             if(distance[j][now_x] == distance[now_x][now_y] - 1){
-                route[i] = now_y;
+                route[i] = now_x;
                 now_y = now_x;
                 now_x = j;
-                i = 0;
+                j = 0;
             }
         }
     }
-    for(int i = 0; i < size; i++){
+    for (int i = step - 1; i >= 0; i--){
         printf("%d ", route[i]);
     }
     printf("\n");
