@@ -1,1 +1,1 @@
-route[i] = now_x;
+int* BFSresult = 
