@@ -2,88 +2,88 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-int check = -1;
-int pause = -1;
-
 typedef struct node
 {
     int x;
     int y;
 } node;
 
-void BFS(int srcx, int srcy, int **maze, int size){
+void BFS(int src, int end, int **maze, int size){
     int **distance = malloc(size * sizeof(int *));
     for (int i = 0; i < size; i++)
         distance[i] = malloc(size * sizeof(int));
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < size; i++)// i is starting point and j is ending point
     {
         for (int j = 0; j < size; j++)
         {
-            if (maze[i][j] == 1)
-                distance[i][j] = -2; // use -2 to represent wall
+            if (maze[i][j] == false)
+                distance[i][j] = -2; // use -2 to represent no linked
             else
-                distance[i][j] = -1;
+                distance[i][j] = -1; // -1 to represent linked
         }
     }
-    distance[srcx][srcy] = 0;
-    // printf("Initialize distance table finished.\n");
+    distance[src][src] = 0;// starting point
 
     node queue[size * size + 1];
     int head = 0, tail = 1;
-    queue[0].x = srcx;
-    queue[0].y = srcy;
+    queue[0].x = src;
+    queue[0].y = src;//(src, src) is starting point
     int node_x, node_y;
     // bfs
     while (head != tail)
     {
         node_x = queue[head].x;
         node_y = queue[head].y;
-
-        // up
-        if (distance[node_x - 1][node_y] == -1)
-        {
-            queue[tail].x = node_x - 1;
-            queue[tail].y = node_y;
-            distance[node_x - 1][node_y] = distance[node_x][node_y] + 1;
-            tail++;
+        if (node_x == end && node_y == end){
+            break;
         }
-        // right
-        if (distance[node_x][node_y + 1] == -1)
-        {
-            queue[tail].x = node_x;
-            queue[tail].y = node_y + 1;
-            distance[node_x][node_y + 1] = distance[node_x][node_y] + 1;
-            tail++;
-        }
-        // down
-        if (distance[node_x + 1][node_y] == -1)
-        {
-            queue[tail].x = node_x + 1;
-            queue[tail].y = node_y;
-            distance[node_x + 1][node_y] = distance[node_x][node_y] + 1;
-            tail++;
-        }
-        // left
-        if (distance[node_x][node_y - 1] == -1)
-        {
-            queue[tail].x = node_x;
-            queue[tail].y = node_y - 1;
-            distance[node_x][node_y - 1] = distance[node_x][node_y] + 1;
-            tail++;
+        for(int i = 0; i < size; i++){
+            if(distance[node_y][i] == -1){
+                queue[tail].x = node_y;
+                queue[tail].y = i;
+                distance[node_y][i] = distance[node_x][node_y] + 1;
+                node_x = node_y; //start linked point reset
+                tail++;
+            }
         }
         head++;
     }
+    // generate route
+    int *route = malloc((1000000) * sizeof(int));
+    int now_x = end;
+    int now_y = end;
+    int step = distance[end][end];
+    for (int i = 0; i < step; i++){
+        for(int j = 0; j < size; j++){
+            if(distance[j][now_x] == distance[now_x][now_y] - 1){
+                route[i] = now_y;
+                now_y = now_x;
+                now_x = j;
+                i = 0;
+            }
+        }
+    }
+    for(int i = 0; i < size; i++){
+        printf("%d ", route[i]);
+    }
+    printf("\n");
 }
 
 int main(){
     int Nodes, Links, TimeSlots, Req;
     int trash, st, ed;
     scanf("%d %d %d %d", &Nodes, &Links, &TimeSlots, &Req);
+
     int Nodemem[Nodes];
     for(int i = 0; i < Nodes; i++){
         scanf("%d %d", &trash, &Nodemem[i]);
     }
-    int Linkmem[Nodes][Nodes];
+
+    int **Linkmem = malloc(Nodes * sizeof(int *));
+    for (int i = 0; i < Nodes; i++)
+    {
+        Linkmem[i] = (int *)calloc(Nodes, sizeof(int));
+    }
     for(int i = 0; i < Links; i++){
         scanf("%d %d %d", &trash, &st, &ed);
         Linkmem[st][ed] = true;
@@ -92,6 +92,13 @@ int main(){
     for(int i = 0; i < Req; i++){
         scanf("%d %d %d", &trash, &st, &ed);
         Reqmem[st][ed] = true;
+    }
+    for(int i = 0; i < Nodes; i++){
+        for( int j = 0; j < Nodes; j++){
+            if(Reqmem[i][j] == true){
+                BFS(i, j, Linkmem, Nodes);
+            }
+        }
     }
         
 }
