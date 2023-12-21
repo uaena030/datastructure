@@ -95,7 +95,7 @@ tree* CBT(int front, int rear, int*route, int Nodemem, tree *curNode, int Time){
             curNode -> Lchild = newnode;
         }
         else{
-
+            //deal with capacity
             CBT(front, mid, route, Nodemem, curNode->Lchild, Time);
         }
     }
@@ -108,11 +108,11 @@ tree* CBT(int front, int rear, int*route, int Nodemem, tree *curNode, int Time){
             CBT(mid, rear, route, Nodemem, curNode->Rchild, Time);
         }
     }
-    else if(mid - 1 == front){//entangle(bottom of tree, left leaf)
-        
-    }
-    else if(mid + 1 == rear){//brfore entangle(bottom of tree, right leaf)
-
+    //entangle統一建在Lchild node
+    else if(mid == front || mid == rear){//entangle(bottom of tree)
+        newnode -> Lchild -> data_front = front;
+        newnode -> Lchild -> data_rear = rear;
+        newnode -> Lchild -> Time = Time;
     }
     return curNode;
 
