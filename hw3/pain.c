@@ -11,7 +11,7 @@ typedef struct node{
 typedef struct{
     int data_front, data_rear, Time;
     tree *Lchild, *Rchild;
-}tree;
+} tree;
 
 void deleteTree(tree* curNode){
     if(curNode == NULL)return;
@@ -108,8 +108,8 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
             }
             Nodemem[Time][front]--;
             Nodemem[Time][mid]--;
-            int nextfloor = Time--;//Time < 0 is invalid
-            CBT(front, mid, route, Nodemem, curNode->Lchild, nextfloor);
+            //Time < 0 is invalid
+            CBT(front, mid, route, Nodemem, curNode->Lchild, Time--);
         }
     }
     else if(mid + 1 != rear){//insert right leaf(not bottom of tree)
@@ -124,20 +124,22 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
             }
             Nodemem[Time][mid]--;
             Nodemem[Time][rear]--;
-            int nextfloor = Time--;
-            CBT(mid, rear, route, Nodemem, curNode->Rchild, nextfloor);
+            CBT(mid, rear, route, Nodemem, curNode->Rchild, Time--);
         }
     }
     //entangle統一建在Lchild node
     else if(mid == front || mid == rear){//entangle(bottom of tree)
-        int nextfloor = Time--;
         newnode -> Lchild -> data_front = front;
         newnode -> Lchild -> data_rear = rear;
-        newnode -> Lchild -> Time = nextfloor;
+        newnode -> Lchild -> Time = Time--;
         newnode -> Lchild -> Rchild = NULL;
         newnode -> Lchild -> Lchild = NULL;
     }
-    return Nodemem;
+    return curNode;
+}
+
+void Ptree(tree *route, int Time){
+    
 }
 
 int main(){
@@ -174,9 +176,9 @@ int main(){
                 (*root) = (tree){.data_front = 0, .data_rear = 0, .Lchild = NULL, .Rchild = NULL};
                 int temptime = TimeSlots - 1;
                 CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
+                Ptree(root, temptime);
             }
         }
     }
-    
         
 }
