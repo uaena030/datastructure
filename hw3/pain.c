@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-int step;
+int step, firstinsert = 0;
 
 typedef struct node{
     int x;
@@ -87,7 +87,8 @@ int* BFS(int src, int end, int **maze, int size){
 }
 tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time){
     int mid = (front + rear + 1) / 2;
-    int TT = Time--;
+    int TT = Time -  1;
+    int check, type_a;
     tree *newnode = (tree *)malloc(sizeof(tree));
     newnode -> data_front = route[front];
     newnode -> data_rear = route[rear];
@@ -97,23 +98,30 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
     if(curNode == NULL){
         return newnode;
     }
-    if(mid == front || mid == rear){//entangle(bottom of tree)
-        newnode -> Lchild -> data_front = route[front];
-        newnode -> Lchild -> data_rear = route[rear];
-        newnode -> Lchild -> Time = Time--;
-        newnode -> Lchild -> Rchild = NULL;
-        newnode -> Lchild -> Lchild = NULL;
+    if((mid == front || mid == rear) && check != true){//brfore entangle(brfore bottom of tree)
+        if(type_a == 1){
+            newnode -> Time = TT;
+            curNode -> Lchild = newnode;
+            goto jump;
+        }
+        curNode -> Lchild = newnode;
+        tree *newnode = (tree *)malloc(sizeof(tree));
+        newnode->data_front = route[front];
+        newnode->data_rear = route[rear];
+        newnode->Time = Time - 1;
+        newnode->Lchild = NULL;
+        newnode->Rchild = NULL;
+        curNode -> Lchild -> Lchild = newnode;
+        check = true;
     }
+    jump:
     if(mid != front){//insert left leaf(not bottom of tree)
         if(curNode -> Lchild == NULL){//insert Lchild
             curNode -> Lchild = newnode;
             Nodemem[Time][front]--;
             Nodemem[Time][rear]--;
-            CBT(front, mid, route, Nodemem, curNode->Lchild, TT);
-        }
-        else{//
             //deal with capacity
-            if(Nodemem[Time][front]-- < 0 || Nodemem[Time][mid]-- < 0 || Time-- < 0){//reach edge
+            if(Nodemem[Time][front]-- < 0 || Nodemem[Time][mid]-- < 0 || Time - 1 < 0){//reach edge
                 deleteTree(curNode);
                 return 0;
             }
@@ -122,19 +130,40 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
         }
     }
     if(mid != rear){//insert right leaf(not bottom of tree)
-        if(curNode -> Rchild == NULL){//insert Rchild
-            curNode -> Rchild = newnode;
-            Nodemem[Time][front]--;
-            Nodemem[Time][rear]--;
-            CBT(mid, rear, route, Nodemem, curNode->Rchild, TT);
-        }
-        else{
-            // deal with capacity
-            if(Nodemem[Time][mid]-- < 0 || Nodemem[Time][rear]-- < 0 || Time-- < 0){//reach edge
-                deleteTree(curNode);
-                return 0;
+        type_a = 1;
+        if(firstinsert == 0){
+            if(curNode -> Lchild -> Rchild == NULL){//insert Rchild
+                firstinsert = 1;
+                newnode->data_front = route[mid];
+                newnode->data_rear = route[rear];
+                newnode->Time = TT;
+                curNode -> Lchild -> Rchild = newnode;
+                Nodemem[TT][front]--;
+                Nodemem[TT][rear]--;
+                // deal with capacity
+                if(Nodemem[TT][mid]-- < 0 || Nodemem[TT][rear]-- < 0 || TT - 1 < 0){//reach edge
+                    deleteTree(curNode);
+                    return 0;
+                }
+                CBT(mid, rear, route, Nodemem, curNode -> Lchild -> Rchild, TT);
             }
-            CBT(mid, rear, route, Nodemem, curNode->Rchild, TT);
+        }
+        else if(firstinsert == 1){
+            if(curNode -> Rchild == NULL){//insert Rchild
+                firstinsert = 1;
+                newnode->data_front = route[mid];
+                newnode->data_rear = route[rear];
+                newnode->Time = TT;
+                curNode -> Lchild -> Rchild = newnode;
+                Nodemem[TT][front]--;
+                Nodemem[TT][rear]--;
+                // deal with capacity
+                if(Nodemem[TT][mid]-- < 0 || Nodemem[TT][rear]-- < 0 || TT - 1 < 0){//reach edge
+                    deleteTree(curNode);
+                    return 0;
+                }
+                CBT(mid, rear, route, Nodemem, curNode -> Rchild, TT);
+            }
         }
     }
     //entangle統一建在Lchild node
@@ -144,10 +173,10 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
 void Postorder(tree *route, int Time){
     int initial = Time;
     // deal with entangle(should not be printed)
-    if(route){
+    if(route != NULL){
         Postorder(route -> Lchild, Time++);
         Postorder(route -> Rchild, Time++);
-        if(route -> Lchild != NULL && route -> Rchild == NULL){//before entangle
+        if(route -> Lchild == NULL && route -> Rchild == NULL){//before entangle
             printf("%d %d %d\n", route -> data_front, route -> data_rear, Time);
         }
         //print child
@@ -194,10 +223,12 @@ int main(){
             if(Reqmem[i][j] == true){
                 int* BFSresult = BFS(i, j, Linkmem, Nodes);
                 tree *root = (tree *) malloc(sizeof(tree));
-                (*root) = (tree){.data_front = 0, .data_rear = 0, .Lchild = NULL, .Rchild = NULL};
+                (*root) = (tree){.data_front = 0, .data_rear = 0, .Time = 0, .Lchild = NULL, .Rchild = NULL};
                 int temptime = TimeSlots - 1;
                 CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
+                firstinsert == 0;
                 Postorder(root, temptime);
+                deleteTree(root);
             }
         }
     }
