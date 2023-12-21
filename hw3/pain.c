@@ -138,8 +138,13 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
     return curNode;
 }
 
-void Ptree(tree *route, int Time){
-    
+void Postorder(tree *route, int Time){
+    if(route){
+        Postorder(route -> Lchild, Time);
+        Postorder(route -> Rchild, Time);
+        printf("%d %d ", route -> data_front, route -> data_rear);
+    }
+    // deal with not print entangle
 }
 
 int main(){
@@ -176,7 +181,7 @@ int main(){
                 (*root) = (tree){.data_front = 0, .data_rear = 0, .Lchild = NULL, .Rchild = NULL};
                 int temptime = TimeSlots - 1;
                 CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
-                Ptree(root, temptime);
+                Postorder(root, temptime);
             }
         }
     }
