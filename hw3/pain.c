@@ -69,7 +69,7 @@ int* BFS(int src, int end, int **maze, int size){
     int now_y = end;
     //printf("total step is : %d\n", distance[end][end]);
     step = distance[end][end];
-    for (int i = 0; i < step; i++){
+    for (int i = step - 1; i >= 0; i--){
         for(int j = 0; j < size; j++){
             if(distance[j][now_x] == distance[now_x][now_y] - 1){
                 route[i] = now_x;
@@ -79,42 +79,54 @@ int* BFS(int src, int end, int **maze, int size){
             }
         }
     }
-    return route;
-    /*for (int i = step - 1; i >= 0; i--){
+    return route;//第0元素是起點
+    /*for (int i = 0; i < step>; i++){
         printf("%d ", route[i]);
     }
     printf("\n");*/
 }
 tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time){
     int mid = (front + rear + 1) / 2;
+    int TT = Time--;
     tree *newnode = (tree *)malloc(sizeof(tree));
-    newnode -> data_front = front;
-    newnode -> data_rear = rear;
+    newnode -> data_front = route[front];
+    newnode -> data_rear = route[rear];
     newnode -> Time = Time;
     newnode -> Lchild = NULL;
     newnode -> Rchild = NULL;
     if(curNode == NULL){
         return newnode;
     }
-    if(mid - 1 != front){//insert left leaf(not bottom of tree)
-        if(curNode -> Lchild == NULL){
+    if(mid == front || mid == rear){//entangle(bottom of tree)
+        newnode -> Lchild -> data_front = route[front];
+        newnode -> Lchild -> data_rear = route[rear];
+        newnode -> Lchild -> Time = Time--;
+        newnode -> Lchild -> Rchild = NULL;
+        newnode -> Lchild -> Lchild = NULL;
+    }
+    if(mid != front){//insert left leaf(not bottom of tree)
+        if(curNode -> Lchild == NULL){//insert Lchild
             curNode -> Lchild = newnode;
+            Nodemem[Time][front]--;
+            Nodemem[Time][rear]--;
+            CBT(front, mid, route, Nodemem, curNode->Lchild, TT);
         }
-        else{
+        else{//
             //deal with capacity
             if(Nodemem[Time][front]-- < 0 || Nodemem[Time][mid]-- < 0 || Time-- < 0){//reach edge
                 deleteTree(curNode);
                 return 0;
             }
-            Nodemem[Time][front]--;
-            Nodemem[Time][mid]--;
             //Time < 0 is invalid
-            CBT(front, mid, route, Nodemem, curNode->Lchild, Time--);
+            CBT(front, mid, route, Nodemem, curNode->Lchild, TT);
         }
     }
-    else if(mid + 1 != rear){//insert right leaf(not bottom of tree)
-        if(curNode -> Rchild == NULL){
+    if(mid != rear){//insert right leaf(not bottom of tree)
+        if(curNode -> Rchild == NULL){//insert Rchild
             curNode -> Rchild = newnode;
+            Nodemem[Time][front]--;
+            Nodemem[Time][rear]--;
+            CBT(mid, rear, route, Nodemem, curNode->Rchild, TT);
         }
         else{
             // deal with capacity
@@ -122,43 +134,47 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
                 deleteTree(curNode);
                 return 0;
             }
-            Nodemem[Time][mid]--;
-            Nodemem[Time][rear]--;
-            CBT(mid, rear, route, Nodemem, curNode->Rchild, Time--);
+            CBT(mid, rear, route, Nodemem, curNode->Rchild, TT);
         }
     }
     //entangle統一建在Lchild node
-    else if(mid == front || mid == rear){//entangle(bottom of tree)
-        newnode -> Lchild -> data_front = front;
-        newnode -> Lchild -> data_rear = rear;
-        newnode -> Lchild -> Time = Time--;
-        newnode -> Lchild -> Rchild = NULL;
-        newnode -> Lchild -> Lchild = NULL;
-    }
     return curNode;
 }
 
 void Postorder(tree *route, int Time){
+    int initial = Time;
+    // deal with entangle(should not be printed)
     if(route){
-        Postorder(route -> Lchild, Time);
-        Postorder(route -> Rchild, Time);
-        printf("%d %d ", route -> data_front, route -> data_rear);
+        Postorder(route -> Lchild, Time++);
+        Postorder(route -> Rchild, Time++);
+        if(route -> Lchild != NULL && route -> Rchild == NULL){//before entangle
+            printf("%d %d %d\n", route -> data_front, route -> data_rear, Time);
+        }
+        //print child
+        if(route -> Lchild != NULL && route -> Rchild != NULL){
+            printf("%d %d %d %d %d %d %d\n", route -> data_front, route -> data_rear\
+            , route -> Lchild -> data_front, route -> Lchild -> data_rear, route -> Rchild -> data_front, route -> Rchild -> data_rear, Time);
+        }
     }
-    // deal with not print entangle
 }
 
 int main(){
     int Nodes, Links, TimeSlots, Req;
     int trash, st, ed;
     scanf("%d %d %d %d", &Nodes, &Links, &TimeSlots, &Req);
-    
-    int Nodemem[TimeSlots][Nodes];
+    int **Nodemem = malloc(TimeSlots * sizeof(int *));
+    for (int i = 0; i < TimeSlots; i++)
+    {
+        Nodemem[i] = (int *)calloc(Nodes, sizeof(int));
+    }
     for(int i = 0; i < Nodes; i++){
-        for(int j = 0; j < TimeSlots; j++){
-            scanf("%d %d", &trash, &Nodemem[j][i]);
+        scanf("%d %d", &trash, &Nodemem[0][i]);
+    }
+    for(int i = 1; i < TimeSlots; i++){
+        for(int j = 0; j < Nodes; j++){
+            Nodemem[i][j] = Nodemem[0][j];
         }
     }
-
     int **Linkmem = malloc(Nodes * sizeof(int *));
     for (int i = 0; i < Nodes; i++)
     {
@@ -185,5 +201,4 @@ int main(){
             }
         }
     }
-        
 }
