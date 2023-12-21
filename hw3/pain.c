@@ -8,9 +8,9 @@ typedef struct node{
     int y;
 } node;
 
-typedef struct{
+typedef struct tree{
     int data_front, data_rear, Time;
-    tree *Lchild, *Rchild;
+    struct tree *Lchild, *Rchild;
 } tree;
 
 void deleteTree(tree* curNode){
@@ -151,7 +151,7 @@ int main(){
     int Nodes, Links, TimeSlots, Req;
     int trash, st, ed;
     scanf("%d %d %d %d", &Nodes, &Links, &TimeSlots, &Req);
-
+    
     int Nodemem[TimeSlots][Nodes];
     for(int i = 0; i < Nodes; i++){
         for(int j = 0; j < TimeSlots; j++){
