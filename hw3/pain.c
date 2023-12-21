@@ -8,6 +8,11 @@ typedef struct node{
     int y;
 } node;
 
+typedef struct{
+    int data_front, data_rear, Time;
+    tree *Lchild, *Rchild;
+}tree;
+
 int* BFS(int src, int end, int **maze, int size){
     int **distance = malloc(size * sizeof(int *));
     for (int i = 0; i < size; i++)
@@ -74,8 +79,43 @@ int* BFS(int src, int end, int **maze, int size){
     }
     printf("\n");*/
 }
-void CBT(int *capcity){
-    
+tree* CBT(int front, int rear, int*route, int Nodemem, tree *curNode, int Time){
+    int mid = (front + rear + 1) / 2;
+    tree *newnode = (tree *)malloc(sizeof(tree));
+    newnode -> data_front = front;
+    newnode -> data_rear = rear;
+    newnode -> Time = Time;
+    newnode -> Lchild = NULL;
+    newnode -> Rchild = NULL;
+    if(curNode == NULL){
+        return newnode;
+    }
+    if(mid - 1 != front){//insert left leaf(not bottom of tree)
+        if(curNode -> Lchild == NULL){
+            curNode -> Lchild = newnode;
+        }
+        else{
+
+            CBT(front, mid, route, Nodemem, curNode->Lchild, Time);
+        }
+    }
+    else if(mid + 1 != rear){//insert right leaf(not bottom of tree)
+        if(curNode -> Rchild == NULL){
+            curNode -> Rchild = newnode;
+        }
+        else{
+
+            CBT(mid, rear, route, Nodemem, curNode->Rchild, Time);
+        }
+    }
+    else if(mid - 1 == front){//entangle(bottom of tree, left leaf)
+        
+    }
+    else if(mid + 1 == rear){//brfore entangle(bottom of tree, right leaf)
+
+    }
+    return curNode;
+
 }
 
 int main(){
@@ -106,7 +146,10 @@ int main(){
         for( int j = 0; j < Nodes; j++){
             if(Reqmem[i][j] == true){
                 int* BFSresult = BFS(i, j, Linkmem, Nodes);
-                CBT();
+                tree *root = (tree *) malloc(sizeof(tree));
+                (*root) = (tree){.data_front = 0, .data_rear = 0, .Lchild = NULL, .Rchild = NULL};
+                int temptime = TimeSlots;
+                CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
             }
         }
     }
