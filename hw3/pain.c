@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-int step, firstinsert = 0;
+int step;
 
 typedef struct node{
     int x;
@@ -12,7 +12,6 @@ typedef struct tree{
     int data_front, data_rear, Time;
     struct tree *Lchild, *Rchild;
 } tree;
-
 void deleteTree(tree* curNode){
     if(curNode == NULL)return;
     deleteTree(curNode->Lchild);
@@ -85,7 +84,7 @@ int* BFS(int src, int end, int **maze, int size){
     }
     printf("\n");*/
 }
-tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time){
+tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time){//目前是無窮迴圈狀態
     int mid = (front + rear + 1) / 2;
     int TT = Time -  1;
     int check, type_a;
@@ -98,7 +97,7 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
     if(curNode == NULL){
         return newnode;
     }
-    if((mid == front || mid == rear) && check != true){//brfore entangle(brfore bottom of tree)
+    if(mid == rear && check != true){//brfore entangle(brfore bottom of tree)
         if(type_a == 1){
             newnode -> Time = TT;
             curNode -> Lchild = newnode;
@@ -131,52 +130,32 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
     }
     if(mid != rear){//insert right leaf(not bottom of tree)
         type_a = 1;
-        if(firstinsert == 0){
-            if(curNode -> Lchild -> Rchild == NULL){//insert Rchild
-                firstinsert = 1;
-                newnode->data_front = route[mid];
-                newnode->data_rear = route[rear];
-                newnode->Time = TT;
-                curNode -> Lchild -> Rchild = newnode;
-                Nodemem[TT][front]--;
-                Nodemem[TT][rear]--;
-                // deal with capacity
-                if(Nodemem[TT][mid]-- < 0 || Nodemem[TT][rear]-- < 0 || TT - 1 < 0){//reach edge
-                    deleteTree(curNode);
-                    return 0;
-                }
-                CBT(mid, rear, route, Nodemem, curNode -> Lchild -> Rchild, TT);
+        curNode = curNode -> Lchild;//這行有問題
+        if(curNode -> Rchild == NULL){//insert Rchild
+            newnode->data_front = route[mid];
+            newnode->data_rear = route[rear];
+            newnode->Time = TT;
+            curNode -> Rchild = newnode;
+            Nodemem[TT][front]--;
+            Nodemem[TT][rear]--;
+            // deal with capacity
+            if(Nodemem[TT][mid]-- < 0 || Nodemem[TT][rear]-- < 0 || TT - 1 < 0){//reach edge
+                deleteTree(curNode);
+                return 0;
             }
-        }
-        else if(firstinsert == 1){
-            if(curNode -> Rchild == NULL){//insert Rchild
-                firstinsert = 1;
-                newnode->data_front = route[mid];
-                newnode->data_rear = route[rear];
-                newnode->Time = TT;
-                curNode -> Lchild -> Rchild = newnode;
-                Nodemem[TT][front]--;
-                Nodemem[TT][rear]--;
-                // deal with capacity
-                if(Nodemem[TT][mid]-- < 0 || Nodemem[TT][rear]-- < 0 || TT - 1 < 0){//reach edge
-                    deleteTree(curNode);
-                    return 0;
-                }
-                CBT(mid, rear, route, Nodemem, curNode -> Rchild, TT);
-            }
+            CBT(mid, rear, route, Nodemem, curNode->Rchild, TT);
         }
     }
     //entangle統一建在Lchild node
     return curNode;
 }
-
 void Postorder(tree *route, int Time){
     int initial = Time;
     // deal with entangle(should not be printed)
     if(route != NULL){
-        Postorder(route -> Lchild, Time++);
-        Postorder(route -> Rchild, Time++);
-        if(route -> Lchild == NULL && route -> Rchild == NULL){//before entangle
+        Postorder(route -> Lchild, Time--);
+        Postorder(route -> Rchild, Time--);
+        if(route -> Lchild == NULL && route -> Rchild == NULL){//entangle
             printf("%d %d %d\n", route -> data_front, route -> data_rear, Time);
         }
         //print child
@@ -226,7 +205,6 @@ int main(){
                 (*root) = (tree){.data_front = 0, .data_rear = 0, .Time = 0, .Lchild = NULL, .Rchild = NULL};
                 int temptime = TimeSlots - 1;
                 CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
-                firstinsert == 0;
                 Postorder(root, temptime);
                 deleteTree(root);
             }
