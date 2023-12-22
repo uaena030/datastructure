@@ -207,6 +207,10 @@ int main(){
         Reqmem[st][ed] = true;
     }
     int k = -1;
+    int accepted = 0, treehome[Req], acce[Req];
+    for(int i = 0; i < Req; i++){
+        acce[i] = false;
+    }
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
             if(Reqmem[i][j] == true){
@@ -217,10 +221,19 @@ int main(){
                 int temptime = TimeSlots - 1;
                 CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
                 root = root -> Lchild;
-                printf("%d %d %d\n", k, i, j);
-                Postorder(root);
-                deleteTree(root);
+                treehome[k] = (int)&(root);
+                accepted++;
+                acce[accepted - 1] = true;
             }
+        }
+    }
+    printf("%d\n", accepted);
+    for(int i = 0; i < Req; i++){
+        if(acce[i] == true){
+            tree *root = (tree*)treehome[i];
+            printf("%d %d %d\n", i, root -> data_front, root -> data_rear);
+            Postorder(root);
+            deleteTree(root);
         }
     }
 }
