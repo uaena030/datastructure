@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-int step;
+int step, bruh = 0;
 
 typedef struct node{
     int x;
@@ -88,7 +88,7 @@ int* BFS(int src, int end, int **maze, int size){
 tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time){//目前是無窮迴圈狀態
     int mid = (front + rear + 1) / 2;
     int TT = Time -  1;
-    int check, type_a;
+    int check;
     tree *newnode = (tree *)malloc(sizeof(tree));
     newnode -> data_front = route[front];
     newnode -> data_rear = route[rear];
@@ -98,24 +98,7 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
     if(curNode == NULL){
         return newnode;
     }
-    if(mid == rear && check != true){//brfore entangle(brfore bottom of tree)
-        if(type_a == 1){
-            newnode -> Time = TT;
-            curNode -> Lchild = newnode;
-            goto jump;
-        }
-        curNode -> Lchild = newnode;
-        tree *newnode = (tree *)malloc(sizeof(tree));
-        newnode->data_front = route[front];
-        newnode->data_rear = route[rear];
-        newnode->Time = Time - 1;
-        newnode->Lchild = NULL;
-        newnode->Rchild = NULL;
-        curNode -> Lchild -> Lchild = newnode;
-        check = true;
-    }
-    jump:
-    if(mid != front){//insert left leaf(not bottom of tree)
+    if(front + 1 != rear){
         if(curNode -> Lchild == NULL){//insert Lchild
             curNode -> Lchild = newnode;
             Nodemem[Time][front]--;
@@ -128,14 +111,15 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
             //Time < 0 is invalid
             CBT(front, mid, route, Nodemem, curNode->Lchild, TT);
         }
-    }
-    if(mid != rear){//insert right leaf(not bottom of tree)
-        type_a = 1;
-        curNode = curNode -> Lchild;//這行有問題
+        curNode = curNode -> Lchild;
+        bruh = true;
         if(curNode -> Rchild == NULL){//insert Rchild
+            tree *newnode = (tree *)malloc(sizeof(tree));
             newnode->data_front = route[mid];
             newnode->data_rear = route[rear];
             newnode->Time = TT;
+            newnode->Lchild = NULL;
+            newnode->Rchild = NULL;
             curNode -> Rchild = newnode;
             Nodemem[TT][front]--;
             Nodemem[TT][rear]--;
@@ -146,6 +130,27 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
             }
             CBT(mid, rear, route, Nodemem, curNode->Rchild, TT);
         }
+    }
+    if(front + 1 == rear && check != true){//before entangle
+        int choose = -1;
+        if (curNode->Lchild == NULL && bruh != true){
+            curNode->Lchild = newnode;
+            choose = 0;
+        }
+        else if(curNode -> Rchild == NULL){
+            choose = 1;
+        }
+        tree *newnode = (tree *)malloc(sizeof(tree));
+        newnode->data_front = route[front];
+        newnode->data_rear = route[rear];
+        newnode->Time = Time - 1;
+        newnode->Lchild = NULL;
+        newnode->Rchild = NULL;
+        if(choose == 0)
+            curNode -> Lchild -> Lchild = newnode;
+        else if(choose == 1)
+            curNode -> Lchild = newnode;
+        check = true;
     }
     //entangle統一建在Lchild node
     return curNode;
@@ -206,6 +211,7 @@ int main(){
                 (*root) = (tree){.data_front = 0, .data_rear = 0, .Time = 0, .Lchild = NULL, .Rchild = NULL};
                 int temptime = TimeSlots - 1;
                 CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
+                root = root -> Lchild;
                 Postorder(root, temptime);
                 deleteTree(root);
             }
