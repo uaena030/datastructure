@@ -25,7 +25,7 @@ int* BFS(int src, int end, int **maze, int size){
     queue[0].x = src;
     queue[0].y = src;//(src, src) is starting point
     int node_x, node_y;
-    int visited[size], ancient[1000000];
+    int visited[size], ancient[1000];
     for(int i = 0; i < size; i++){
         visited[i] = false;
     }
@@ -44,8 +44,6 @@ int* BFS(int src, int end, int **maze, int size){
                 queue[tail].x = node_y;//0 1
                 queue[tail].y = i;//1
                 visited[i] = true;
-                node_x = node_y;
-                node_y = i;
                 tail++;
             }
         }
@@ -53,17 +51,26 @@ int* BFS(int src, int end, int **maze, int size){
         //printf("node_x = %d, node_y = %d\n", node_x, node_y);
     }
     // generate route
-    int rroute[1000000];
+    int rroute[1000];
+    for(int i = 0; i < 1000; i++){
+        rroute[i] = -1;
+    }
     int i = end, j = 0;
-    while(ancient[i] != src){
+    while(i != src){
         rroute[j] = i;
         j++;
         i = ancient[i];
     }
+    rroute[j] = i;
     int *route = malloc((j + 1) * sizeof(int));
     for(int i = 0; i < j + 1; i++){
         route[i] = rroute[j - i];
     }
+    /*for (int i = 0; i < j + 1; i++){
+        printf("%d ", route[i]);
+    }
+    printf("\n");*/
+    step = j + 1;
     return route;//第0元素是起點
 }
 tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time){
@@ -141,10 +148,11 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
             curNode -> Lchild -> Lchild = newnode;
         else if(choose == 1)
             curNode -> Lchild = newnode;
-        if(Nodemem[Time][front]-- < 0 || Nodemem[Time][mid]-- < 0 || Time - 1 < 0){//reach edge
+        /*if(Nodemem[Time][front]-- < 0 || Nodemem[Time][mid]-- < 0 || Time - 1 < 0){//reach edge
             deleteTree(curNode);
             return 0;
-        }
+        }*/
+        //有問題
         check = true;
     }
     //entangle統一建在Lchild node
@@ -156,7 +164,7 @@ void Postorder(tree *route){
         Postorder(route -> Lchild);
         Postorder(route -> Rchild);
         if(route -> Lchild == NULL && route -> Rchild == NULL){//entangle
-            printf("%d %d %d\n", route -> data_front, route -> data_rear, (route -> Time) + 1);
+            printf("%d %d %d\n", route -> data_front, route -> data_rear, route -> Time);
         }
         //print child
         if(route -> Lchild != NULL && route -> Rchild != NULL){
@@ -198,15 +206,18 @@ int main(){
         scanf("%d %d %d", &trash, &st, &ed);
         Reqmem[st][ed] = true;
     }
+    int k = -1;
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
             if(Reqmem[i][j] == true){
+                k++;
                 int* BFSresult = BFS(i, j, Linkmem, Nodes);
                 tree *root = (tree *) malloc(sizeof(tree));
                 (*root) = (tree){.data_front = 0, .data_rear = 0, .Time = 0, .Lchild = NULL, .Rchild = NULL};
                 int temptime = TimeSlots - 1;
                 CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
                 root = root -> Lchild;
+                printf("%d %d %d\n", k, i, j);
                 Postorder(root);
                 deleteTree(root);
             }
