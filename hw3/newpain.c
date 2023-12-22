@@ -135,6 +135,13 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
         int choose = -1;
         if (curNode->Lchild == NULL && bruh != true){
             curNode->Lchild = newnode;
+            Nodemem[Time][front]--;
+            Nodemem[Time][rear]--;
+            //deal with capacity
+            if(Nodemem[Time][front]-- < 0 || Nodemem[Time][mid]-- < 0 || Time - 1 < 0){//reach edge
+                deleteTree(curNode);
+                return 0;
+            }
             choose = 0;
         }
         else if(curNode -> Rchild == NULL){
@@ -144,30 +151,36 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
         newnode->data_front = route[front];
         newnode->data_rear = route[rear];
         newnode->Time = Time - 1;
+        Nodemem[Time - 1][front]--;
+        Nodemem[Time - 1][rear]--;
+        // deal with capacity
         newnode->Lchild = NULL;
         newnode->Rchild = NULL;
         if(choose == 0)
             curNode -> Lchild -> Lchild = newnode;
         else if(choose == 1)
             curNode -> Lchild = newnode;
+        if(Nodemem[Time][front]-- < 0 || Nodemem[Time][mid]-- < 0 || Time - 1 < 0){//reach edge
+            deleteTree(curNode);
+            return 0;
+        }
         check = true;
     }
     //entangle統一建在Lchild node
     return curNode;
 }
-void Postorder(tree *route, int Time){
-    int initial = Time;
+void Postorder(tree *route){
     // deal with entangle(should not be printed)
     if(route != NULL){
-        Postorder(route -> Lchild, Time--);
-        Postorder(route -> Rchild, Time--);
+        Postorder(route -> Lchild);
+        Postorder(route -> Rchild);
         if(route -> Lchild == NULL && route -> Rchild == NULL){//entangle
-            printf("%d %d %d\n", route -> data_front, route -> data_rear, Time);
+            printf("%d %d %d\n", route -> data_front, route -> data_rear, (route -> Time) + 1);
         }
         //print child
         if(route -> Lchild != NULL && route -> Rchild != NULL){
             printf("%d %d %d %d %d %d %d\n", route -> data_front, route -> data_rear\
-            , route -> Lchild -> data_front, route -> Lchild -> data_rear, route -> Rchild -> data_front, route -> Rchild -> data_rear, Time);
+            , route -> Lchild -> data_front, route -> Lchild -> data_rear, route -> Rchild -> data_front, route -> Rchild -> data_rear, route -> Time);
         }
     }
 }
@@ -212,7 +225,7 @@ int main(){
                 int temptime = TimeSlots - 1;
                 CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
                 root = root -> Lchild;
-                Postorder(root, temptime);
+                Postorder(root);
                 deleteTree(root);
             }
         }
