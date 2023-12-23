@@ -1,3 +1,4 @@
+//411410016 yin help debug
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -74,67 +75,33 @@ int* BFS(int src, int end, int **maze, int size){
     step = j + 1;
     return route;//第0元素是起點
 }
-tree* CBT(int front, int rear, int*route, tree *curNode){
+tree* CBT(int front, int rear, int*route){
     int mid = (front + rear + 1) / 2;
-    int check = 0;
+    //int check = 0;
     tree *newnode = (tree *)malloc(sizeof(tree));
     newnode -> data_front = route[front];
     newnode -> data_rear = route[rear];
-    newnode -> Lchild = NULL;
-    newnode -> Rchild = NULL;
-    if(curNode == NULL){
-        return newnode;
-    }
+    
     if(front + 1 != rear){
-        if(curNode -> Lchild == NULL){//insert Lchild
-            curNode -> Lchild = newnode;
-            CBT(front, mid, route, curNode->Lchild);
-        }
-        curNode = curNode -> Lchild;
-        bruh = true;
-        if(curNode -> Rchild == NULL){//insert Rchild
-            tree *newnode = (tree *)malloc(sizeof(tree));
-            newnode->data_front = route[mid];
-            newnode->data_rear = route[rear];
-            newnode->Lchild = NULL;
-            newnode->Rchild = NULL;
-            curNode -> Rchild = newnode;
-            // deal with capacity
-            CBT(mid, rear, route, curNode->Rchild);
-        }
+        newnode->Lchild = CBT(front, mid, route);
+        newnode->Rchild = CBT(mid, rear, route);
     }
-    if(front + 1 == rear && check != true){//before entangle
-        int choose = -1;
-        if (curNode->Lchild == NULL && bruh != true){
-            curNode->Lchild = newnode;
-            choose = 0;
-        }
-        else if(curNode -> Rchild == NULL){
-            choose = 1;
-        }
-        tree *newnode = (tree *)malloc(sizeof(tree));
-        newnode->data_front = route[front];
-        newnode->data_rear = route[rear];
-        newnode->Lchild = NULL;
-        newnode->Rchild = NULL;
-        if(choose == 0)
-            curNode -> Lchild -> Lchild = newnode;
-        else if(choose == 1)
-            curNode -> Lchild = newnode;
-        check = true;
+    else{
+        newnode -> Lchild = NULL;
+        newnode -> Rchild = NULL;
     }
     //entangle統一建在Lchild node
-    return curNode;
+    return newnode;
 }
 
-int judgemem(tree *route, int level, int Timesl, int** Nodemem){
+int judgemem(tree *route, int level, int Timesl, int** tempmem){
     if(route != NULL){
-        judgemem(route->Lchild, level + 1, Timesl, Nodemem);
-        judgemem(route->Rchild, level + 1, Timesl, Nodemem);
+        judgemem(route->Lchild, level + 1, Timesl, tempmem);
+        judgemem(route->Rchild, level + 1, Timesl, tempmem);
         route->Time = Timesl - level;
-        if(Nodemem[route->Time][route->data_front] - 1 >= 0 && Nodemem[route->Time][route->data_rear] - 1 >= 0){
-            Nodemem[route->Time][route->data_front]--;
-            Nodemem[route->Time][route->data_rear]--;
+        if(tempmem[route->Time][route->data_front] - 1 >= 0 && tempmem[route->Time][route->data_rear] - 1 >= 0){
+            tempmem[route->Time][route->data_front]--;
+            tempmem[route->Time][route->data_rear]--;
         }
         else
             return 0;
@@ -142,12 +109,12 @@ int judgemem(tree *route, int level, int Timesl, int** Nodemem){
     return 1;
 }
 
-void flo(tree *route, int level){
+void flo(tree *route, int lev){
     if(route != NULL){
-        flo(route->Lchild, level + 1);
-        flo(route->Rchild, level + 1);
-        if(level > max){
-            max = level;
+        flo(route->Lchild, lev + 1);
+        flo(route->Rchild, lev + 1);
+        if(lev > max){
+            max = lev;
         }
     }
 }
@@ -211,7 +178,7 @@ int main(){
         acce[i] = false;
     }
     tree* root[Req];
-    int finalroute[Req][10000];
+    int finalroute[Req][1000];
     int stepcount[Req];
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
@@ -222,21 +189,16 @@ int main(){
                 for(int mu = 0; mu < step; mu++){
                     finalroute[k][mu] = BFSresult[mu];
                 }
-                root[k] = (tree *) malloc(sizeof(tree));
-                root[k]->data_front = 0;
-                root[k]->data_rear = 0;
-                root[k]->Time = 0;
-                root[k]->Lchild = NULL;
-                root[k]->Rchild = NULL;
                 for (int m = 0; m < TimeSlots; m++){
                     for (int n = 0; n < Nodes; n++){
                         tempmem[m][n] = Nodemem[m][n];
                     }
                 }
-                CBT(0, step - 1, BFSresult, root[i]);
-                root[k] = root[k] -> Lchild;
+                root[k] = CBT(0, step - 1, BFSresult);
+                
                 max = 0;
                 flo(root[k], 0);
+                
                 if(judgemem(root[k], 0, max, tempmem) != 0){
                     for (int m = 0; m < TimeSlots; m++){
                         for (int n = 0; n < Nodes; n++){
@@ -244,7 +206,7 @@ int main(){
                         }
                     }
                     accepted++;
-                    acce[accepted - 1] = true;//accessible request
+                    acce[k] = true;//accessible request
                 }         
             }
         }
