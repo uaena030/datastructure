@@ -1,4 +1,3 @@
-//411410016 yin help debug
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -178,7 +177,7 @@ int main(){
         acce[i] = false;
     }
     tree* root[Req];
-    int finalroute[Req][1000];
+    int finalroute[Req][60];
     int stepcount[Req];
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
@@ -194,17 +193,19 @@ int main(){
                         tempmem[m][n] = Nodemem[m][n];
                     }
                 }
-                root[k] = CBT(0, step - 1, BFSresult);
+                tree* tmpresult = (tree*) malloc(sizeof(tree));
+                tmpresult = CBT(0, step - 1, BFSresult);
                 
                 max = 0;
-                flo(root[k], 0);
-                
-                if(judgemem(root[k], 0, max, tempmem) != 0){
+                flo(tmpresult, 0);
+                if(judgemem(tmpresult, 0, max, tempmem) != 0){
                     for (int m = 0; m < TimeSlots; m++){
                         for (int n = 0; n < Nodes; n++){
                             Nodemem[m][n] = tempmem[m][n];
                         }
                     }
+                    root[k] = tmpresult;
+                    deleteTree(tmpresult);
                     accepted++;
                     acce[k] = true;//accessible request
                 }         
