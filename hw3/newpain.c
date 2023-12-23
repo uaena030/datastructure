@@ -51,8 +51,8 @@ int* BFS(int src, int end, int **maze, int size){
         //printf("node_x = %d, node_y = %d\n", node_x, node_y);
     }
     // generate route
-    int rroute[1000];
-    for(int i = 0; i < 1000; i++){
+    int rroute[7000];
+    for(int i = 0; i < 7000; i++){
         rroute[i] = -1;
     }
     int i = end, j = 0;
@@ -207,33 +207,46 @@ int main(){
         Reqmem[st][ed] = true;
     }
     int k = -1;
-    int accepted = 0, treehome[Req], acce[Req];
+    int accepted = 0, acce[Req];
     for(int i = 0; i < Req; i++){
         acce[i] = false;
     }
+    tree* root[Req];
+    int finalroute[Req][6000];
+    int stepcount[Req];
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
             if(Reqmem[i][j] == true){
                 k++;
                 int* BFSresult = BFS(i, j, Linkmem, Nodes);
-                tree *root = (tree *) malloc(sizeof(tree));
-                (*root) = (tree){.data_front = 0, .data_rear = 0, .Time = 0, .Lchild = NULL, .Rchild = NULL};
+                stepcount[k] = step;
+                for(int mu = 0; mu < step; mu++){
+                    finalroute[k][mu] = BFSresult[mu];
+                }
+                root[k] = (tree *) malloc(sizeof(tree));
+                root[k]->data_front = 0;
+                root[k]->data_rear = 0;
+                root[k]->Time = 0;
+                root[k]->Lchild = NULL;
+                root[k]->Rchild = NULL;
                 int temptime = TimeSlots - 1;
-                CBT(0, step - 1, BFSresult, Nodemem, root, temptime);
-                root = root -> Lchild;
-                treehome[k] = (int)&(root);
+                CBT(0, step - 1, BFSresult, Nodemem, root[i], temptime);
+                root[k] = root[k] -> Lchild;
                 accepted++;
-                acce[accepted - 1] = true;
+                acce[accepted - 1] = true;//accessible request
             }
         }
     }
     printf("%d\n", accepted);
     for(int i = 0; i < Req; i++){
         if(acce[i] == true){
-            tree *root = (tree*)treehome[i];
-            printf("%d %d %d\n", i, root -> data_front, root -> data_rear);
-            Postorder(root);
-            deleteTree(root);
+            printf("%d ", i);
+            for(int j = 0; j < stepcount[i]; j++){
+                printf("%d ",finalroute[i][j]);
+            }
+            printf("\n");
+            Postorder(root[i]);
+            deleteTree(root[i]);
         }
     }
 }

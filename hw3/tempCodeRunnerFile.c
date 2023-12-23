@@ -1,1 +1,2 @@
-int* BFSresult = 
+
+                root[k]->Rchild = NULL;
