@@ -89,10 +89,10 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
     if(front + 1 != rear){
         if(curNode -> Lchild == NULL){//insert Lchild
             curNode -> Lchild = newnode;
-            Nodemem[Time][front]--;
-            Nodemem[Time][rear]--;
+            Nodemem[Time][route[front]]--;
+            Nodemem[Time][route[rear]]--;
             //deal with capacity
-            if(Nodemem[Time][front]-- < 0 || Nodemem[Time][mid]-- < 0 || Time - 1 < 0){//reach edge
+            if(Nodemem[Time][route[front]]-- < 0 || Nodemem[Time][route[mid]]-- < 0 || Time - 1 < 0){//reach edge
                 deleteTree(curNode);
                 return 0;
             }
@@ -109,10 +109,10 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
             newnode->Lchild = NULL;
             newnode->Rchild = NULL;
             curNode -> Rchild = newnode;
-            Nodemem[TT][front]--;
-            Nodemem[TT][rear]--;
+            Nodemem[TT][route[front]]--;
+            Nodemem[TT][route[rear]]--;
             // deal with capacity
-            if(Nodemem[TT][mid]-- < 0 || Nodemem[TT][rear]-- < 0 || TT - 1 < 0){//reach edge
+            if(Nodemem[TT][route[mid]]-- < 0 || Nodemem[TT][route[rear]]-- < 0 || TT - 1 < 0){//reach edge
                 deleteTree(curNode);
                 return 0;
             }
@@ -123,10 +123,10 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
         int choose = -1;
         if (curNode->Lchild == NULL && bruh != true){
             curNode->Lchild = newnode;
-            Nodemem[Time][front]--;
-            Nodemem[Time][rear]--;
+            Nodemem[Time][route[front]]--;
+            Nodemem[Time][route[rear]]--;
             //deal with capacity
-            if(Nodemem[Time][front]-- < 0 || Nodemem[Time][mid]-- < 0 || Time - 1 < 0){//reach edge
+            if(Nodemem[Time][route[front]]-- < 0 || Nodemem[Time][route[mid]]-- < 0 || Time - 1 < 0){//reach edge
                 deleteTree(curNode);
                 return 0;
             }
@@ -139,8 +139,8 @@ tree* CBT(int front, int rear, int*route, int** Nodemem, tree *curNode, int Time
         newnode->data_front = route[front];
         newnode->data_rear = route[rear];
         newnode->Time = Time - 1;
-        Nodemem[Time - 1][front]--;
-        Nodemem[Time - 1][rear]--;
+        Nodemem[Time - 1][route[front]]--;
+        Nodemem[Time - 1][route[rear]]--;
         // deal with capacity
         newnode->Lchild = NULL;
         newnode->Rchild = NULL;
@@ -164,7 +164,7 @@ void Postorder(tree *route){
         Postorder(route -> Lchild);
         Postorder(route -> Rchild);
         if(route -> Lchild == NULL && route -> Rchild == NULL){//entangle
-            printf("%d %d %d\n", route -> data_front, route -> data_rear, route -> Time);
+            printf("%d %d %d\n", route -> data_front, route -> data_rear, (route -> Time) + 1);
         }
         //print child
         if(route -> Lchild != NULL && route -> Rchild != NULL){
@@ -182,6 +182,11 @@ int main(){
     for (int i = 0; i < TimeSlots; i++)
     {
         Nodemem[i] = (int *)calloc(Nodes, sizeof(int));
+    }
+    int **tempmem = malloc(TimeSlots * sizeof(int *));
+    for (int i = 0; i < TimeSlots; i++)
+    {
+        tempmem[i] = (int *)calloc(Nodes, sizeof(int));
     }
     for(int i = 0; i < Nodes; i++){
         scanf("%d %d", &trash, &Nodemem[0][i]);
@@ -212,7 +217,7 @@ int main(){
         acce[i] = false;
     }
     tree* root[Req];
-    int finalroute[Req][6000];
+    int finalroute[Req][Nodes];
     int stepcount[Req];
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
@@ -230,10 +235,21 @@ int main(){
                 root[k]->Lchild = NULL;
                 root[k]->Rchild = NULL;
                 int temptime = TimeSlots - 1;
-                CBT(0, step - 1, BFSresult, Nodemem, root[i], temptime);
-                root[k] = root[k] -> Lchild;
-                accepted++;
-                acce[accepted - 1] = true;//accessible request
+                for (int m = 0; m < TimeSlots; m++){
+                    for (int n = 0; n < Nodes; n++){
+                        tempmem[m][n] = Nodemem[m][n];
+                    }
+                }
+                if(CBT(0, step - 1, BFSresult, tempmem, root[i], temptime) != 0){
+                    for (int m = 0; m < TimeSlots; m++){
+                        for (int n = 0; n < Nodes; n++){
+                            Nodemem[m][n] = tempmem[m][n];
+                        }
+                    }
+                    root[k] = root[k] -> Lchild;
+                    accepted++;
+                    acce[accepted - 1] = true;//accessible request
+                }
             }
         }
     }
