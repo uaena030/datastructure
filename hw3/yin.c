@@ -1,3 +1,4 @@
+//411410016 yin help debug
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -20,6 +21,7 @@ void deleteTree(tree* curNode){
     deleteTree(curNode->Rchild);
     free(curNode);
 }
+
 int* BFS(int src, int end, int **maze, int size){
     node queue[size * size + 1];
     int head = 0, tail = 1;
@@ -74,6 +76,7 @@ int* BFS(int src, int end, int **maze, int size){
     step = j + 1;
     return route;//第0元素是起點
 }
+
 tree* CBT(int front, int rear, int*route){
     int mid = (front + rear + 1) / 2;
     //int check = 0;
@@ -129,7 +132,7 @@ void Postorder(tree *route){
         //print child
         if(route -> Lchild != NULL && route -> Rchild != NULL){
             printf("%d %d %d %d %d %d %d\n", route -> data_front, route -> data_rear\
-            , route -> Lchild -> data_front, route -> Lchild -> data_rear, route -> Rchild -> data_front, route -> Rchild -> data_rear, (route -> Time) + 1);
+            , route -> Lchild -> data_front, route -> Lchild -> data_rear, route -> Rchild -> data_front, route -> Rchild -> data_rear, (route -> Time) + 2);
         }
     }
 }
@@ -161,12 +164,22 @@ int main(){
     {
         Linkmem[i] = (int *)calloc(Nodes, sizeof(int));
     }
+    for(int i = 0; i < Nodes; i++){
+        for(int j = 0 ; j < Nodes; j++){
+            Linkmem[i][j] = false;
+        }
+    }
     for(int i = 0; i < Links; i++){
         scanf("%d %d %d", &trash, &st, &ed);
         Linkmem[st][ed] = true;
         Linkmem[ed][st] = true;
     }
     int Reqmem[Nodes][Nodes];
+    for(int i = 0; i < Nodes; i++){
+        for(int j = 0 ; j < Nodes; j++){
+            Reqmem[i][j] = false;
+        }
+    }
     for(int i = 0; i < Req; i++){
         scanf("%d %d %d", &trash, &st, &ed);
         Reqmem[st][ed] = true;
@@ -177,7 +190,7 @@ int main(){
         acce[i] = false;
     }
     tree* root[Req];
-    int finalroute[Req][60];
+    int finalroute[Req][10000];
     int stepcount[Req];
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
@@ -193,24 +206,27 @@ int main(){
                         tempmem[m][n] = Nodemem[m][n];
                     }
                 }
-                tree* tmpresult = (tree*) malloc(sizeof(tree));
-                tmpresult = CBT(0, step - 1, BFSresult);
-                
+                root[k] = CBT(0, step - 1, BFSresult);
                 max = 0;
-                flo(tmpresult, 0);
-                if(judgemem(tmpresult, 0, max, tempmem) != 0){
+                flo(root[k], 0);
+                if(judgemem(root[k], 0, max, tempmem) != 0){
                     for (int m = 0; m < TimeSlots; m++){
                         for (int n = 0; n < Nodes; n++){
                             Nodemem[m][n] = tempmem[m][n];
                         }
                     }
-                    root[k] = tmpresult;
-                    deleteTree(tmpresult);
                     accepted++;
                     acce[k] = true;//accessible request
                 }         
             }
         }
+    }
+    for (int m = 0; m < TimeSlots; m++){
+        printf("Time: %d", m);
+        for (int n = 0; n < Nodes; n++){
+            printf("%d", Nodemem[m][n]);
+        }
+        printf("\n");
     }
     printf("%d\n", accepted);
     for(int i = 0; i < Req; i++){
