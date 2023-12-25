@@ -4,6 +4,7 @@
 #include <stdbool.h>
 int step, bruh = 0;
 int max = 0;
+int Nodes, TimeSlots;
 
 typedef struct node{
     int x;
@@ -22,13 +23,13 @@ void deleteTree(tree* curNode){
     free(curNode);
 }
 
-int* BFS(int src, int end, int **maze, int size){
+int* BFS(int src, int end, int maze[Nodes][Nodes], int size){
     node queue[size * size + 1];
     int head = 0, tail = 1;
     queue[0].x = src;
     queue[0].y = src;//(src, src) is starting point
     int node_x, node_y;
-    int visited[size], ancient[10000];
+    int visited[size], ancient[6000];
     for(int i = 0; i < size; i++){
         visited[i] = false;
     }
@@ -54,8 +55,8 @@ int* BFS(int src, int end, int **maze, int size){
         //printf("node_x = %d, node_y = %d\n", node_x, node_y);
     }
     // generate route
-    int rroute[10000];
-    for(int i = 0; i < 10000; i++){
+    int rroute[6000];
+    for(int i = 0; i < 6000; i++){
         rroute[i] = -1;
     }
     int i = end, j = 0;
@@ -65,7 +66,7 @@ int* BFS(int src, int end, int **maze, int size){
         i = ancient[i];
     }
     rroute[j] = i;
-    int *route = malloc((j + 1) * sizeof(int));
+    int *route = malloc((6000) * sizeof(int));
     for(int i = 0; i < j + 1; i++){
         route[i] = rroute[j - i];
     }
@@ -96,7 +97,7 @@ tree* CBT(int front, int rear, int*route){
     return newnode;
 }
 
-int judgemem(tree *route, int level, int Timesl, int** tempmem){
+int judgemem(tree *route, int level, int Timesl, int tempmem[TimeSlots][Nodes]){
     if(route != NULL){
         judgemem(route->Lchild, level + 1, Timesl, tempmem);
         judgemem(route->Rchild, level + 1, Timesl, tempmem);
@@ -138,19 +139,11 @@ void Postorder(tree *route){
 }
 
 int main(){
-    int Nodes, Links, TimeSlots, Req;
+    int Links, Req;
     int trash, st, ed;
     scanf("%d %d %d %d", &Nodes, &Links, &TimeSlots, &Req);
-    int **Nodemem = malloc(TimeSlots * sizeof(int *));
-    for (int i = 0; i < TimeSlots; i++)
-    {
-        Nodemem[i] = (int *)calloc(Nodes, sizeof(int));
-    }
-    int **tempmem = malloc(TimeSlots * sizeof(int *));
-    for (int i = 0; i < TimeSlots; i++)
-    {
-        tempmem[i] = (int *)calloc(Nodes, sizeof(int));
-    }
+    int Nodemem[TimeSlots][Nodes];
+    int tempmem[TimeSlots][Nodes];
     for(int i = 0; i < Nodes; i++){
         scanf("%d %d", &trash, &Nodemem[0][i]);
     }
@@ -159,11 +152,7 @@ int main(){
             Nodemem[i][j] = Nodemem[0][j];
         }
     }
-    int **Linkmem = malloc(Nodes * sizeof(int *));
-    for (int i = 0; i < Nodes; i++)
-    {
-        Linkmem[i] = (int *)calloc(Nodes, sizeof(int));
-    }
+    int Linkmem[Nodes][Nodes];
     for(int i = 0; i < Nodes; i++){
         for(int j = 0 ; j < Nodes; j++){
             Linkmem[i][j] = false;
@@ -190,14 +179,13 @@ int main(){
         acce[i] = false;
     }
     tree* root[Req];
-    int finalroute[Req][10000];
+    int finalroute[Req][6000];
     int stepcount[Req];
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
             if(Reqmem[i][j] == true){
                 k++;
-                int *BFSresult = malloc((6000) * sizeof(int));
-                BFSresult = BFS(i, j, Linkmem, Nodes);
+                int* BFSresult = BFS(i, j, Linkmem, Nodes);
                 stepcount[k] = step;
                 for(int mu = 0; mu < step; mu++){
                     finalroute[k][mu] = BFSresult[mu];
