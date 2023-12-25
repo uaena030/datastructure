@@ -99,10 +99,19 @@ tree* CBT(int front, int rear, int*route){
 
 int judgemem(tree *route, int level, int Timesl, int tempmem[TimeSlots][Nodes]){
     if(route != NULL){
+        int check = false;
         judgemem(route->Lchild, level + 1, Timesl, tempmem);
         judgemem(route->Rchild, level + 1, Timesl, tempmem);
-        route->Time = Timesl - level;
-        if(tempmem[route->Time][route->data_front] - 1 >= 0 && tempmem[route->Time][route->data_rear] - 1 >= 0){
+        route->Time = Timesl - level + 1;
+        if(route->Lchild == NULL && route->Rchild == NULL){
+            if(tempmem[(route->Time) - 1][route->data_front] - 1 >= 0 && tempmem[(route->Time) - 1][route->data_rear] - 1 >= 0){
+               tempmem[(route->Time) - 1][route->data_front]--;
+               tempmem[(route->Time) - 1][route->data_rear]--;
+            }
+            else
+                return 0;
+        }
+        if(tempmem[route->Time][route->data_front] - 1 >= 0 && tempmem[route->Time][route->data_rear] - 1 >= 0 && check == false){
             tempmem[route->Time][route->data_front]--;
             tempmem[route->Time][route->data_rear]--;
         }
@@ -128,12 +137,12 @@ void Postorder(tree *route){
         Postorder(route -> Lchild);
         Postorder(route -> Rchild);
         if(route -> Lchild == NULL && route -> Rchild == NULL){//entangle
-            printf("%d %d %d\n", route -> data_front, route -> data_rear, (route -> Time) + 2);
+            printf("%d %d %d\n", route -> data_front, route -> data_rear, (route -> Time) + 1);
         }
         //print child
         if(route -> Lchild != NULL && route -> Rchild != NULL){
             printf("%d %d %d %d %d %d %d\n", route -> data_front, route -> data_rear\
-            , route -> Lchild -> data_front, route -> Lchild -> data_rear, route -> Rchild -> data_front, route -> Rchild -> data_rear, (route -> Time) + 2);
+            , route -> Lchild -> data_front, route -> Lchild -> data_rear, route -> Rchild -> data_front, route -> Rchild -> data_rear, (route -> Time) + 1);
         }
     }
 }
@@ -210,13 +219,13 @@ int main(){
             }
         }
     }
-    /*for (int m = 0; m < TimeSlots; m++){
+    for (int m = 0; m < TimeSlots; m++){
         printf("Time: %d", m);
         for (int n = 0; n < Nodes; n++){
             printf("%d", Nodemem[m][n]);
         }
         printf("\n");
-    }*/
+    }
     printf("%d\n", accepted);
     for(int i = 0; i < Req; i++){
         if(acce[i] == true){
