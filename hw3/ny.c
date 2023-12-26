@@ -6,7 +6,6 @@ int step, bruh = 0;
 int max = 0;
 int Nodes, TimeSlots;
 int breakrecursive = false;
-int cc = false;
 
 typedef struct node{
     int x;
@@ -190,20 +189,11 @@ int main(){
         acce[i] = false;
     }
     tree* root[Req];
-    int finalroute[Req][6000];
+    int finalroute[Req][60];
     int stepcount[Req];
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
-            if(cc == true){
-                j = j - 1;
-            }
-            if(Reqmem[i][j] > 1 && cc == false){//49 36 2
-                cc = true;//same requirement
-            }
-            if(Reqmem[i][j] == 1){
-                cc = false;
-            }
-            if(Reqmem[i][j] != false){
+            while(Reqmem[i][j] > 0){
                 k++;
                 Reqmem[i][j]--;
                 int* BFSresult = BFS(i, j, Linkmem, Nodes);
