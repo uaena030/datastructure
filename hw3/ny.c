@@ -5,6 +5,7 @@
 int step, bruh = 0;
 int max = 0;
 int Nodes, TimeSlots;
+int breakrecursive = false;
 
 typedef struct node{
     int x;
@@ -23,7 +24,7 @@ void deleteTree(tree* curNode){
     free(curNode);
 }
 
-int* BFS(int src, int end, int maze[Nodes][Nodes], int size){
+int* BFS(int src, int end, int maze[Nodes][Nodes], int size){//1 0
     node queue[size * size + 1];
     int head = 0, tail = 1;
     queue[0].x = src;
@@ -33,7 +34,7 @@ int* BFS(int src, int end, int maze[Nodes][Nodes], int size){
     for(int i = 0; i < size; i++){
         visited[i] = false;
     }
-    visited[0] = true;
+    visited[src] = true;
     // bfs
     while (head != tail){
         node_x = queue[head].x;
@@ -98,7 +99,7 @@ tree* CBT(int front, int rear, int*route){
 }
 
 int judgemem(tree *route, int level, int Timesl, int tempmem[TimeSlots][Nodes]){
-    if(route != NULL){
+    if(route != NULL && breakrecursive == false){
         int check = false;
         judgemem(route->Lchild, level + 1, Timesl, tempmem);
         judgemem(route->Rchild, level + 1, Timesl, tempmem);
@@ -109,16 +110,16 @@ int judgemem(tree *route, int level, int Timesl, int tempmem[TimeSlots][Nodes]){
                tempmem[(route->Time) - 1][route->data_rear]--;
             }
             else
-                return 0;
+                breakrecursive = true;
         }
         if(tempmem[route->Time][route->data_front] - 1 >= 0 && tempmem[route->Time][route->data_rear] - 1 >= 0 && check == false){
             tempmem[route->Time][route->data_front]--;
             tempmem[route->Time][route->data_rear]--;
         }
         else
-            return 0;
+            breakrecursive = true;
     }
-    return 1;
+    return 0;
 }
 
 void flo(tree *route, int lev){
@@ -180,7 +181,7 @@ int main(){
     }
     for(int i = 0; i < Req; i++){
         scanf("%d %d %d", &trash, &st, &ed);
-        Reqmem[st][ed] = true;
+        Reqmem[st][ed]++;
     }
     int k = -1;
     int accepted = 0, acce[Req];
@@ -188,12 +189,16 @@ int main(){
         acce[i] = false;
     }
     tree* root[Req];
-    int finalroute[Req][6000];
+    int finalroute[Req][60];
     int stepcount[Req];
     for(int i = 0; i < Nodes; i++){
         for( int j = 0; j < Nodes; j++){
-            if(Reqmem[i][j] == true){
+            if(Reqmem[i][j - 1] != false && j > 0){
+                j = j - 1;
+            }
+            if(Reqmem[i][j] != false){
                 k++;
+                Reqmem[i][j]--;
                 int* BFSresult = BFS(i, j, Linkmem, Nodes);
                 stepcount[k] = step;
                 for(int mu = 0; mu < step; mu++){
@@ -207,7 +212,8 @@ int main(){
                 root[k] = CBT(0, step - 1, BFSresult);
                 max = 0;
                 flo(root[k], 0);
-                if(judgemem(root[k], 0, max, tempmem) != 0){
+                judgemem(root[k], 0, max, tempmem);
+                if(breakrecursive == false){
                     for (int m = 0; m < TimeSlots; m++){
                         for (int n = 0; n < Nodes; n++){
                             Nodemem[m][n] = tempmem[m][n];
@@ -215,17 +221,19 @@ int main(){
                     }
                     accepted++;
                     acce[k] = true;//accessible request
-                }         
+                }
+                else
+                    breakrecursive = false;         
             }
         }
     }
-    for (int m = 0; m < TimeSlots; m++){
+    /*for (int m = 0; m < TimeSlots; m++){
         printf("Time: %d", m);
         for (int n = 0; n < Nodes; n++){
             printf("%d", Nodemem[m][n]);
         }
         printf("\n");
-    }
+    }*/
     printf("%d\n", accepted);
     for(int i = 0; i < Req; i++){
         if(acce[i] == true){
